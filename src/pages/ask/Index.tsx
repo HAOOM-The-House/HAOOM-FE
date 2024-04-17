@@ -1,9 +1,10 @@
-import { Text, View } from 'react-native'
+import ScreenLayout from '@/components/ScreenLayout'
+import { Text } from 'react-native'
 
 export default function AskMain() {
   return (
-    <View>
+    <ScreenLayout>
       <Text>it's Ask Main Page</Text>
-    </View>
+    </ScreenLayout>
   )
 }

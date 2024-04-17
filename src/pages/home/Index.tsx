@@ -1,9 +1,10 @@
-import { Text, View } from 'react-native'
+import ScreenLayout from '@/components/ScreenLayout'
+import { Text } from 'react-native'
 
 export default function HomeMain() {
   return (
-    <View>
+    <ScreenLayout>
       <Text>it's Home Main Page</Text>
-    </View>
+    </ScreenLayout>
   )
 }
