@@ -38,7 +38,7 @@ export default function BottomTabNav() {
       />
       <Tab.Screen
         name="SearchNav"
-        component={AskNav}
+        component={SearchNav}
         options={{
           tabBarIcon: ({ focused }) => (
             <TabWrapper>
@@ -50,7 +50,7 @@ export default function BottomTabNav() {
       />
       <Tab.Screen
         name="AskNav"
-        component={SearchNav}
+        component={AskNav}
         options={{
           tabBarIcon: ({ focused }) => (
             <TabWrapper>
