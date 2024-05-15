@@ -5,15 +5,14 @@ import {
   NaverMapPathOverlay,
   NaverMapPolygonOverlay,
   NaverMapView,
+  Region,
 } from '@mj-studio/react-native-naver-map'
+import { useEffect, useState } from 'react'
 import { Text } from 'react-native'
-
-interface Region {
-  latitude: number
-  longitude: number
-  latitudeDelta: number
-  longitudeDelta: number
-}
+import * as Location from 'expo-location'
+import { useAtom } from 'jotai'
+import { locationAtom } from '@/states/location'
+import styled from 'styled-components/native'
 
 const jejuRegion: Region = {
   latitude: 33.20530773,
@@ -23,16 +22,31 @@ const jejuRegion: Region = {
 }
 
 export default function HomeMain() {
+  const [location, setLocation] = useAtom(locationAtom)
+
+  useEffect(() => {
+    getDefaultLocation()
+  }, [])
+
+  const getDefaultLocation = async () => {
+    try {
+      const currentLocation = await Location.getLastKnownPositionAsync()
+      setLocation(currentLocation)
+    } catch (error) {
+      console.log(`location loading error: ${error}`)
+    }
+  }
+
   return (
     <ScreenLayout>
-      <NaverMapView style={{ flex: 1 }}>
+      <NaverMapView style={{ flex: 1 }} initialRegion={jejuRegion}>
         <NaverMapMarkerOverlay
-          latitude={33.3565607356}
-          longitude={126.48599018}
+          latitude={33.20530773}
+          longitude={126.14656715029}
           onTap={() => console.log(1)}
-          anchor={{ x: 0.5, y: 1 }}
-          width={100}
-          height={100}
+          anchor={{ x: 0, y: 1 }}
+          width={40}
+          height={50}
         />
       </NaverMapView>
     </ScreenLayout>

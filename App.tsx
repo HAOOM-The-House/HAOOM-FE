@@ -4,11 +4,29 @@ import { View } from 'react-native'
 import 'react-native-gesture-handler'
 import { useFonts } from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import * as Location from 'expo-location'
+import { useAtom } from 'jotai'
+import { locationAtom } from '@/states/location'
 
 SplashScreen.preventAutoHideAsync()
 
 export default function App() {
+  const [, setLocation] = useAtom(locationAtom)
+
+  useEffect(() => {
+    ;(async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync()
+      if (status !== 'granted') {
+        console.log('Permission to access location was denied')
+        return
+      }
+
+      let location = await Location.getCurrentPositionAsync()
+      setLocation(location)
+    })()
+  }, [])
+
   const [fontsLoaded, fontError] = useFonts({
     Thin: require('./src/assets/fonts/Pretendard-Thin.otf'), // 100
     ExtraLight: require('./src/assets/fonts/Pretendard-ExtraLight.otf'), //200
