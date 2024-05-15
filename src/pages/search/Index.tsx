@@ -2,6 +2,7 @@ import Divider from '@/components/Divider'
 import Header from '@/components/Header'
 import ScreenLayout from '@/components/ScreenLayout'
 import SearchBar from '@/components/search/SearchBar'
+import SearchResult from '@/components/search/SearchResult'
 import SearchTip from '@/components/search/SearchTip'
 import { BottomTabNavParams } from '@/navigators/BottomTabNav'
 import { colors } from '@/utils/colors'
@@ -20,6 +21,10 @@ export default function SearchMain() {
     navigation.navigate('HomeNav')
   }
 
+  const onPressResult = () => {
+    console.log(1)
+  }
+
   const onPressFindWithCurrentLocation = () => {}
   return (
     <ScreenLayout>
@@ -32,7 +37,15 @@ export default function SearchMain() {
       </SearchContainer>
       <Divider height={8} />
       <ResultContainer>
-        <SearchTip />
+        {searchText.length === 0 ? (
+          <SearchTip />
+        ) : (
+          <ResultWrapper>
+            <SearchResult name="하움 삼성점" distance={159} number="021234567" onPress={onPressResult} />
+            <SearchResult name="하움 삼성점" distance={159} number="021234567" onPress={onPressResult} />
+            <SearchResult name="하움 삼성점" distance={159} number="021234567" onPress={onPressResult} />
+          </ResultWrapper>
+        )}
       </ResultContainer>
     </ScreenLayout>
   )
@@ -54,3 +67,4 @@ const ResultContainer = styled.View`
   width: 100%;
   padding: 0 20px;
 `
+const ResultWrapper = styled.View``
