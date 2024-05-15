@@ -8,7 +8,13 @@ import HomeIcon from '@/assets/images/SVGs/Home.svg'
 import MapIcon from '@/assets/images/SVGs/Map.svg'
 import InquireIcon from '@/assets/images/SVGs/Inquire.svg'
 
-const Tab = createBottomTabNavigator()
+export type BottomTabNavParams = {
+  HomeNav: undefined
+  SearchNav: undefined
+  AskNav: undefined
+}
+
+const Tab = createBottomTabNavigator<BottomTabNavParams>()
 
 export default function BottomTabNav() {
   return (

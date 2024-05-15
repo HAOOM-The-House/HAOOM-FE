@@ -2,7 +2,11 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import SearchMain from '@/pages/search/Index'
 
-const Stack = createStackNavigator()
+export type SearchNavParams = {
+  SearchMain: undefined
+}
+
+const Stack = createStackNavigator<SearchNavParams>()
 
 export default function SearchNav() {
   return (
