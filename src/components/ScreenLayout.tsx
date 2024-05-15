@@ -4,11 +4,12 @@ import { StatusBar } from 'expo-status-bar'
 
 interface ScreenLayoutProps {
   children: React.ReactNode
+  background?: string
 }
 
-export default function ScreenLayout({ children }: ScreenLayoutProps) {
+export default function ScreenLayout({ children, background = 'white' }: ScreenLayoutProps) {
   return (
-    <ScreenContainer>
+    <ScreenContainer style={{ backgroundColor: background }}>
       <StatusBar />
       {children}
     </ScreenContainer>
