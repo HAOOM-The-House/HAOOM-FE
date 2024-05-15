@@ -32,7 +32,7 @@ export default function SearchBar({ value, setValue }: SearchBarProps) {
 const Container = styled.View`
   width: 100%;
   border-radius: 6px;
-  background-color: '#f6f7f8';
+  background-color: #f6f7f8;
   flex-direction: row;
   gap: 10px;
   padding: 12px 10px;
