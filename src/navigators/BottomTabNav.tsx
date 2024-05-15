@@ -1,17 +1,17 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import HomeNav from './HomeNav'
-import AskNav from './AskNav'
 import SearchNav from './SearchNav'
 import styled from 'styled-components/native'
 import { colors } from '@/utils/colors'
 import HomeIcon from '@/assets/images/SVGs/Home.svg'
 import MapIcon from '@/assets/images/SVGs/Map.svg'
 import InquireIcon from '@/assets/images/SVGs/Inquire.svg'
+import AskMain from '@/pages/ask/Index'
 
 export type BottomTabNavParams = {
   HomeNav: undefined
   SearchNav: undefined
-  AskNav: undefined
+  AskMain: undefined
 }
 
 const Tab = createBottomTabNavigator<BottomTabNavParams>()
@@ -55,8 +55,8 @@ export default function BottomTabNav() {
         }}
       />
       <Tab.Screen
-        name="AskNav"
-        component={AskNav}
+        name="AskMain"
+        component={AskMain}
         options={{
           tabBarIcon: ({ focused }) => (
             <TabWrapper>

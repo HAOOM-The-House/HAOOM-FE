@@ -22,6 +22,7 @@ const Container = styled.View`
   padding: 13px 16px;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 `
 const TitleText = styled.Text`
   font-size: 18px;
