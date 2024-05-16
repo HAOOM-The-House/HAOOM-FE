@@ -9,7 +9,7 @@ import { colors } from '@/utils/colors'
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
 import { useNavigation } from '@react-navigation/native'
 import { useState } from 'react'
-import { TouchableOpacity } from 'react-native'
+import { Keyboard, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import styled from 'styled-components/native'
 
 type SearchNavProps = BottomTabNavigationProp<BottomTabNavParams, 'SearchNav'>
@@ -26,31 +26,41 @@ export default function SearchMain() {
   }
 
   const onPressFindWithCurrentLocation = () => {}
+  const dismissKeyboard = () => {
+    Keyboard.dismiss()
+  }
   return (
     <ScreenLayout>
-      <Header onPressLeftIcon={onPressBackBtn} title="지점 찾기" />
-      <SearchContainer>
-        <SearchBar value={searchText} setValue={setSearchText} />
-        <TouchableOpacity onPress={onPressFindWithCurrentLocation}>
-          <FindAddressText>현재 위치로 주소 찾기</FindAddressText>
-        </TouchableOpacity>
-      </SearchContainer>
-      <Divider height={8} />
-      <ResultContainer>
-        {searchText.length === 0 ? (
-          <SearchTip />
-        ) : (
-          <ResultWrapper>
-            <SearchResult name="하움 삼성점" distance={159} number="021234567" onPress={onPressResult} />
-            <SearchResult name="하움 삼성점" distance={159} number="021234567" onPress={onPressResult} />
-            <SearchResult name="하움 삼성점" distance={159} number="021234567" onPress={onPressResult} />
-          </ResultWrapper>
-        )}
-      </ResultContainer>
+      <TouchableWithoutFeedback onPress={dismissKeyboard} style={{ flex: 1 }}>
+        <Container>
+          <Header onPressLeftIcon={onPressBackBtn} title="지점 찾기" />
+          <SearchContainer>
+            <SearchBar value={searchText} setValue={setSearchText} />
+            <TouchableOpacity onPress={onPressFindWithCurrentLocation}>
+              <FindAddressText>현재 위치로 주소 찾기</FindAddressText>
+            </TouchableOpacity>
+          </SearchContainer>
+          <Divider height={8} />
+          <ResultContainer>
+            {searchText.length === 0 ? (
+              <SearchTip />
+            ) : (
+              <ResultWrapper>
+                <SearchResult name="하움 삼성점" distance={159} number="021234567" onPress={onPressResult} />
+                <SearchResult name="하움 삼성점" distance={159} number="021234567" onPress={onPressResult} />
+                <SearchResult name="하움 삼성점" distance={159} number="021234567" onPress={onPressResult} />
+              </ResultWrapper>
+            )}
+          </ResultContainer>
+        </Container>
+      </TouchableWithoutFeedback>
     </ScreenLayout>
   )
 }
 
+const Container = styled.View`
+  flex: 1;
+`
 const SearchContainer = styled.View`
   width: 100%;
   padding: 0 20px;
