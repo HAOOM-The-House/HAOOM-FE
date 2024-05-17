@@ -3,7 +3,7 @@ import styled from 'styled-components/native'
 import PrevIcon from '@/assets/images/SVGs/LeftArrow.svg'
 
 interface HeaderProps {
-  title: string
+  title?: string
   onPressLeftIcon?: () => void
   showLeftIcon: boolean
 }
