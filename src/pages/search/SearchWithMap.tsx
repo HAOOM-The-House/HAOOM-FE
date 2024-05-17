@@ -1,17 +1,21 @@
 import Header from '@/components/Header'
 import ScreenLayout from '@/components/ScreenLayout'
+import { SearchNavParams } from '@/navigators/SearchNav'
 import { colors } from '@/utils/colors'
+import { StackScreenProps } from '@react-navigation/stack'
 import styled from 'styled-components/native'
 
-export default function SearchWithMap() {
+type SearchWithMapProps = StackScreenProps<SearchNavParams, 'SearchMap'>
+
+export default function SearchWithMap({ navigation }: SearchWithMapProps) {
   const onPressBackBtn = () => {
-    console.log(1)
+    navigation.goBack()
   }
 
   return (
     <ScreenLayout>
       <Container>
-        <Header title="지도에서 위치 찾기" onPressLeftIcon={onPressBackBtn} />
+        <Header title="지도에서 위치 찾기" showLeftIcon onPressLeftIcon={onPressBackBtn} />
         <MapContainer />
         <BottomContainer>
           <TextContainer>

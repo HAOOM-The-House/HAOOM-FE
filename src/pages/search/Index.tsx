@@ -5,27 +5,27 @@ import SearchBar from '@/components/search/SearchBar'
 import SearchResult from '@/components/search/SearchResult'
 import SearchTip from '@/components/search/SearchTip'
 import { BottomTabNavParams } from '@/navigators/BottomTabNav'
+import { SearchNavParams } from '@/navigators/SearchNav'
 import { colors } from '@/utils/colors'
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
 import { useNavigation } from '@react-navigation/native'
+import { StackScreenProps } from '@react-navigation/stack'
 import { useState } from 'react'
 import { Keyboard, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import styled from 'styled-components/native'
 
-type SearchNavProps = BottomTabNavigationProp<BottomTabNavParams, 'SearchNav'>
-export default function SearchMain() {
-  const navigation = useNavigation<SearchNavProps>()
+type SearchMainProps = StackScreenProps<SearchNavParams, 'SearchMain'>
+export default function SearchMain({ navigation }: SearchMainProps) {
   const [searchText, setSearchText] = useState<string>('')
-
-  const onPressBackBtn = () => {
-    navigation.navigate('HomeNav')
-  }
 
   const onPressResult = () => {
     console.log(1)
   }
 
-  const onPressFindWithCurrentLocation = () => {}
+  const onPressFindWithCurrentLocation = () => {
+    navigation.navigate('SearchMap')
+  }
+
   const dismissKeyboard = () => {
     Keyboard.dismiss()
   }
