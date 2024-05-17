@@ -4,13 +4,14 @@ import PrevIcon from '@/assets/images/SVGs/LeftArrow.svg'
 
 interface HeaderProps {
   title: string
-  onPressLeftIcon: () => void
+  onPressLeftIcon?: () => void
+  showLeftIcon: boolean
 }
 
-export default function Header({ title, onPressLeftIcon }: HeaderProps) {
+export default function Header({ title, onPressLeftIcon, showLeftIcon }: HeaderProps) {
   return (
     <Container>
-      <PrevIcon width={20} height={20} />
+      {showLeftIcon ? <PrevIcon width={20} height={20} onPress={onPressLeftIcon} /> : <EmptyIcon />}
       <TitleText>{title}</TitleText>
       <EmptyIcon />
     </Container>

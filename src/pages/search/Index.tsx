@@ -33,7 +33,7 @@ export default function SearchMain() {
     <ScreenLayout>
       <TouchableWithoutFeedback onPress={dismissKeyboard} style={{ flex: 1 }}>
         <Container>
-          <Header onPressLeftIcon={onPressBackBtn} title="지점 찾기" />
+          <Header showLeftIcon={false} title="지점 찾기" />
           <SearchContainer>
             <SearchBar value={searchText} setValue={setSearchText} />
             <TouchableOpacity onPress={onPressFindWithCurrentLocation}>

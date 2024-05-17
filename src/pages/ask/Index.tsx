@@ -6,17 +6,10 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
 import { useNavigation } from '@react-navigation/native'
 import styled from 'styled-components/native'
 
-type AskMainProps = BottomTabNavigationProp<BottomTabNavParams, 'AskMain'>
-
 export default function AskMain() {
-  const navigation = useNavigation<AskMainProps>()
-  const onPressBackBtn = () => {
-    navigation.navigate('HomeNav')
-  }
-
   return (
     <ScreenLayout>
-      <Header title="가맹문의" onPressLeftIcon={onPressBackBtn} />
+      <Header title="가맹문의" showLeftIcon={false} />
       <Container>
         <Description>가맹점 문의에 대한 궁금하신 사항은{'\n'}하단 연락처로 문의해주세요!</Description>
         <NumberContainer>
