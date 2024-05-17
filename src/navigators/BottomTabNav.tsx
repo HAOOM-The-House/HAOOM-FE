@@ -7,6 +7,7 @@ import HomeIcon from '@/assets/images/SVGs/Home.svg'
 import MapIcon from '@/assets/images/SVGs/Map.svg'
 import InquireIcon from '@/assets/images/SVGs/Inquire.svg'
 import AskMain from '@/pages/ask/Index'
+import { Platform } from 'react-native'
 
 export type BottomTabNavParams = {
   HomeNav: undefined
@@ -23,6 +24,7 @@ export default function BottomTabNav() {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarActiveTintColor: colors.main,
+        tabBarHideOnKeyboard: Platform.OS === 'android' ? true : false,
         tabBarStyle: {
           height: 82,
           borderTopColor: 'rgba(112, 115, 124, 0.16)',
