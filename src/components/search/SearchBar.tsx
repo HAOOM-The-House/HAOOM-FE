@@ -24,7 +24,11 @@ export default function SearchBar({ value, setValue }: SearchBarProps) {
         onChangeText={(input: string) => setValue(input)}
         autoCapitalize="none"
       />
-      {value.length !== 0 && <CloseIcon onPress={onPressResetBtn} width={16} height={16} />}
+      {value.length !== 0 && (
+        <CloseBtn onPress={onPressResetBtn}>
+          <CloseIcon width={16} height={16} />
+        </CloseBtn>
+      )}
     </Container>
   )
 }
@@ -43,4 +47,10 @@ const Input = styled.TextInput`
   color: ${colors.black};
   font-size: 16px;
   font-family: 'Medium';
+`
+const CloseBtn = styled.TouchableOpacity`
+  width: 16px;
+  height: 16px;
+  justify-content: center;
+  align-items: center;
 `
