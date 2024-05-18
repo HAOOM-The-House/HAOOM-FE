@@ -1,7 +1,9 @@
 import Header from '@/components/Header'
 import ScreenLayout from '@/components/ScreenLayout'
+import { SearchNavParams } from '@/navigators/SearchNav'
 import { colors } from '@/utils/colors'
 import { screenWidth } from '@/utils/dimensions'
+import { StackScreenProps } from '@react-navigation/stack'
 import { useEffect } from 'react'
 import styled from 'styled-components/native'
 
@@ -26,10 +28,19 @@ type ItemProps = { title: string }
 
 type ProductListProps = StackScreenProps<SearchNavParams, 'SearchStore'>
 
+export default function ProductList({ navigation }: ProductListProps) {
+  const onPressProduct = () => {
+    navigation.navigate('SearchProduct')
+  }
+  const onPressBackBtn = () => {
+    navigation.goBack()
+  }
+
+  const Item = ({ title }: ItemProps) => <ImgWrapper onPress={onPressProduct} />
   return (
     <ScreenLayout>
       <Container>
-        <Header showLeftIcon={true} />
+        <Header showLeftIcon={true} onPressLeftIcon={onPressBackBtn} />
         <TextContainer>
           <Name>하움 삼성점</Name>
           <DetailContainer>
