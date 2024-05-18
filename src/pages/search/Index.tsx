@@ -19,7 +19,7 @@ export default function SearchMain({ navigation }: SearchMainProps) {
   const [searchText, setSearchText] = useState<string>('')
 
   const onPressResult = () => {
-    console.log(1)
+    navigation.navigate('SearchStore')
   }
 
   const onPressFindWithCurrentLocation = () => {
