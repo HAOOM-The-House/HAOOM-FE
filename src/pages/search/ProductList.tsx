@@ -24,8 +24,7 @@ const dummydata = [
 ]
 type ItemProps = { title: string }
 
-export default function ProductList() {
-  const Item = ({ title }: ItemProps) => <ImgWrapper />
+type ProductListProps = StackScreenProps<SearchNavParams, 'SearchStore'>
 
   return (
     <ScreenLayout>

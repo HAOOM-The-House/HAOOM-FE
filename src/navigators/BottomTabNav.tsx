@@ -8,6 +8,8 @@ import MapIcon from '@/assets/images/SVGs/Map.svg'
 import InquireIcon from '@/assets/images/SVGs/Inquire.svg'
 import AskMain from '@/pages/ask/Index'
 import { Platform } from 'react-native'
+import { useAtom } from 'jotai'
+import { tabVisibilityAtom } from '@/states/globalAtom'
 
 export type BottomTabNavParams = {
   HomeNav: undefined
@@ -18,6 +20,7 @@ export type BottomTabNavParams = {
 const Tab = createBottomTabNavigator<BottomTabNavParams>()
 
 export default function BottomTabNav() {
+  const [isTabVisible] = useAtom(tabVisibilityAtom)
   return (
     <Tab.Navigator
       screenOptions={{
@@ -26,6 +29,7 @@ export default function BottomTabNav() {
         tabBarActiveTintColor: colors.main,
         tabBarHideOnKeyboard: Platform.OS === 'android' ? true : false,
         tabBarStyle: {
+          display: isTabVisible ? 'flex' : 'none',
           height: 82,
           borderTopColor: 'rgba(112, 115, 124, 0.16)',
           borderTopWidth: 0.5,
