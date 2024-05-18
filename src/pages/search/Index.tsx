@@ -7,6 +7,7 @@ import SearchTip from '@/components/search/SearchTip'
 import { BottomTabNavParams } from '@/navigators/BottomTabNav'
 import { SearchNavParams } from '@/navigators/SearchNav'
 import { tabVisibilityAtom } from '@/states/globalAtom'
+import { SearchTextAtom } from '@/states/searchAtom'
 import { colors } from '@/utils/colors'
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
 import { useIsFocused, useNavigation } from '@react-navigation/native'
@@ -20,7 +21,7 @@ type SearchMainProps = StackScreenProps<SearchNavParams, 'SearchMain'>
 export default function SearchMain({ navigation }: SearchMainProps) {
   const isFocused = useIsFocused()
   const [, setTabVisibility] = useAtom(tabVisibilityAtom)
-  const [searchText, setSearchText] = useState<string>('')
+  const [searchText, setSearchText] = useAtom(SearchTextAtom)
 
   const onPressResult = () => {
     navigation.navigate('SearchStore')

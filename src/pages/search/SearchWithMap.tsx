@@ -2,6 +2,7 @@ import Header from '@/components/Header'
 import ScreenLayout from '@/components/ScreenLayout'
 import { SearchNavParams } from '@/navigators/SearchNav'
 import { tabVisibilityAtom } from '@/states/globalAtom'
+import { SearchTextAtom } from '@/states/searchAtom'
 import { colors } from '@/utils/colors'
 import { useIsFocused } from '@react-navigation/core'
 import { StackScreenProps } from '@react-navigation/stack'
@@ -14,8 +15,14 @@ type SearchWithMapProps = StackScreenProps<SearchNavParams, 'SearchMap'>
 export default function SearchWithMap({ navigation }: SearchWithMapProps) {
   const isFocused = useIsFocused()
   const [, setTabVisibility] = useAtom(tabVisibilityAtom)
+  const [, setSearchText] = useAtom(SearchTextAtom)
 
   const onPressBackBtn = () => {
+    navigation.goBack()
+  }
+
+  const onPressSettingBtn = () => {
+    setSearchText('강남구 삼성동')
     navigation.goBack()
   }
 
@@ -33,7 +40,7 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
             <Name>하움 삼성점</Name>
             <Address>서울특별시 강남구 삼성동</Address>
           </TextContainer>
-          <SettingBtn>
+          <SettingBtn onPress={onPressSettingBtn}>
             <SettingText>선택한 위치로 설정</SettingText>
           </SettingBtn>
         </BottomContainer>
