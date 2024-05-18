@@ -11,7 +11,13 @@ interface HeaderProps {
 export default function Header({ title, onPressLeftIcon, showLeftIcon }: HeaderProps) {
   return (
     <Container>
-      {showLeftIcon ? <PrevIcon width={20} height={20} onPress={onPressLeftIcon} /> : <EmptyIcon />}
+      {showLeftIcon ? (
+        <SideButton onPress={onPressLeftIcon}>
+          <PrevIcon width={20} height={20} />
+        </SideButton>
+      ) : (
+        <EmptyIcon />
+      )}
       <TitleText>{title}</TitleText>
       <EmptyIcon />
     </Container>
@@ -29,6 +35,12 @@ const TitleText = styled.Text`
   font-size: 18px;
   font-family: 'Bold';
   color: ${colors.black};
+`
+const SideButton = styled.TouchableOpacity`
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
 `
 const EmptyIcon = styled.View`
   height: 20px;
