@@ -17,7 +17,7 @@ export default function ProductDetail({ navigation }: ProductDetailProps) {
 
   useEffect(() => {
     isFocused && setTabVisibility(false)
-  }, [isFocused, isTabVisible])
+  }, [isFocused])
 
   const onPressBackBtn = () => {
     navigation.goBack()

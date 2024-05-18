@@ -6,16 +6,20 @@ import SearchResult from '@/components/search/SearchResult'
 import SearchTip from '@/components/search/SearchTip'
 import { BottomTabNavParams } from '@/navigators/BottomTabNav'
 import { SearchNavParams } from '@/navigators/SearchNav'
+import { tabVisibilityAtom } from '@/states/globalAtom'
 import { colors } from '@/utils/colors'
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
-import { useNavigation } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { StackScreenProps } from '@react-navigation/stack'
-import { useState } from 'react'
+import { useAtom } from 'jotai'
+import { useEffect, useState } from 'react'
 import { Keyboard, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import styled from 'styled-components/native'
 
 type SearchMainProps = StackScreenProps<SearchNavParams, 'SearchMain'>
 export default function SearchMain({ navigation }: SearchMainProps) {
+  const isFocused = useIsFocused()
+  const [, setTabVisibility] = useAtom(tabVisibilityAtom)
   const [searchText, setSearchText] = useState<string>('')
 
   const onPressResult = () => {
@@ -29,6 +33,10 @@ export default function SearchMain({ navigation }: SearchMainProps) {
   const dismissKeyboard = () => {
     Keyboard.dismiss()
   }
+
+  useEffect(() => {
+    isFocused && setTabVisibility(true)
+  }, [isFocused])
   return (
     <ScreenLayout>
       <TouchableWithoutFeedback onPress={dismissKeyboard} style={{ flex: 1 }}>

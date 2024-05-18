@@ -3,9 +3,12 @@ import ScreenLayout from '@/components/ScreenLayout'
 import { SearchNavParams } from '@/navigators/SearchNav'
 import { colors } from '@/utils/colors'
 import { screenWidth } from '@/utils/dimensions'
+import { useIsFocused } from '@react-navigation/core'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useEffect } from 'react'
 import styled from 'styled-components/native'
+import { tabVisibilityAtom } from '@/states/globalAtom'
+import { useAtom } from 'jotai'
 
 const dummydata = [
   {
@@ -29,12 +32,19 @@ type ItemProps = { title: string }
 type ProductListProps = StackScreenProps<SearchNavParams, 'SearchStore'>
 
 export default function ProductList({ navigation }: ProductListProps) {
+  const isFocused = useIsFocused()
+  const [, setTabVisibility] = useAtom(tabVisibilityAtom)
+
   const onPressProduct = () => {
     navigation.navigate('SearchProduct')
   }
   const onPressBackBtn = () => {
     navigation.goBack()
   }
+
+  useEffect(() => {
+    isFocused && setTabVisibility(false)
+  }, [isFocused])
 
   const Item = ({ title }: ItemProps) => <ImgWrapper onPress={onPressProduct} />
   return (
