@@ -8,12 +8,13 @@ import { StackScreenProps } from '@react-navigation/stack'
 import { useAtom } from 'jotai'
 import { useEffect } from 'react'
 import styled from 'styled-components/native'
+import * as Linking from 'expo-linking'
 
 type ProductDetailProps = StackScreenProps<SearchNavParams, 'SearchProduct'>
 
 export default function ProductDetail({ navigation }: ProductDetailProps) {
   const isFocused = useIsFocused()
-  const [isTabVisible, setTabVisibility] = useAtom(tabVisibilityAtom)
+  const [, setTabVisibility] = useAtom(tabVisibilityAtom)
 
   useEffect(() => {
     isFocused && setTabVisibility(false)
@@ -21,6 +22,11 @@ export default function ProductDetail({ navigation }: ProductDetailProps) {
 
   const onPressBackBtn = () => {
     navigation.goBack()
+  }
+
+  const phoneNumber = '01012345678'
+  const onPressInquireBtn = () => {
+    Linking.openURL(`sms:${phoneNumber}`)
   }
 
   return (
@@ -36,7 +42,7 @@ export default function ProductDetail({ navigation }: ProductDetailProps) {
           <ImageWrapper />
         </ImageContainer>
         <BottomContainer>
-          <InquireBtn>
+          <InquireBtn onPress={onPressInquireBtn}>
             <InquireText>문의하기</InquireText>
           </InquireBtn>
         </BottomContainer>
