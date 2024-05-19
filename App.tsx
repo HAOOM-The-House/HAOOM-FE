@@ -8,8 +8,15 @@ import { useCallback, useEffect, useState } from 'react'
 import * as Location from 'expo-location'
 import { useAtom } from 'jotai'
 import { locationAtom } from '@/states/location'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+if (__DEV__) {
+  require('./ReactotronConfig')
+}
 
 SplashScreen.preventAutoHideAsync()
+
+const queryClient = new QueryClient()
 
 export default function App() {
   const [, setLocation] = useAtom(locationAtom)
@@ -50,10 +57,12 @@ export default function App() {
   }
 
   return (
-    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <NavigationContainer>
-        <BottomTabNav />
-      </NavigationContainer>
-    </View>
+    <QueryClientProvider client={queryClient}>
+      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+        <NavigationContainer>
+          <BottomTabNav />
+        </NavigationContainer>
+      </View>
+    </QueryClientProvider>
   )
 }
