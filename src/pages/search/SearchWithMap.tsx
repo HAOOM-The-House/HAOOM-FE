@@ -22,29 +22,39 @@ type SearchWithMapProps = StackScreenProps<SearchNavParams, 'SearchMap'>
 
 export default function SearchWithMap({ navigation }: SearchWithMapProps) {
   const mapRef = useRef<NaverMapViewRef>(null)
-  const [mapHeight, setMapHeight] = useState<number>(0)
+
   const isFocused = useIsFocused()
-
-  const { data: addressInfo } = useGetAddress()
-
+  const [mapHeight, setMapHeight] = useState<number>(0)
   const [, setTabVisibility] = useAtom(tabVisibilityAtom)
   const [, setSearchText] = useAtom(SearchTextAtom)
-
-  const onPressBackBtn = () => {
-    navigation.goBack()
-  }
-
+  const [pinCoordinate, setPinCoordinate] = useAtom(pinCoordinateAtom)
   const [pinAddress, setPinAddress] = useAtom(pinAddressAtom)
-  const onPressSettingBtn = () => {
-    setSearchText(pinAddress)
-    navigation.goBack()
-  }
+
+  const { data: addressInfo } = useGetAddress()
 
   useEffect(() => {
     isFocused && setTabVisibility(false)
   }, [isFocused])
 
-  const [pinCoordinate, setPinCoordinate] = useAtom(pinCoordinateAtom)
+  useEffect(() => {
+    const address = getAddress(addressInfo?.results[0].region as Region)
+    address.length !== 0 && setPinAddress(address)
+  }, [addressInfo])
+
+  const onPressBackBtn = () => {
+    navigation.goBack()
+  }
+
+  const onPressSettingBtn = () => {
+    setSearchText(pinAddress)
+    navigation.goBack()
+  }
+
+  const getMapHeight = (event: LayoutChangeEvent) => {
+    const { height } = event.nativeEvent.layout
+    setMapHeight(height)
+  }
+
   const getCoordinate = async () => {
     const data = await mapRef.current?.screenToCoordinate({
       screenX: pixelToDpConverter(screenWidth / 2),
@@ -54,16 +64,6 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
     const longitude = Number(data?.longitude)
     setPinCoordinate({ latitude, longitude })
   }
-
-  const getMapHeight = (event: LayoutChangeEvent) => {
-    const { height } = event.nativeEvent.layout
-    setMapHeight(height)
-  }
-
-  useEffect(() => {
-    const address = getAddress(addressInfo?.results[0].region as Region)
-    address.length !== 0 && setPinAddress(address)
-  }, [addressInfo])
 
   return (
     <ScreenLayout>
