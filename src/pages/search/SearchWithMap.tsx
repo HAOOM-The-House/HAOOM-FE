@@ -10,7 +10,7 @@ import { StackScreenProps } from '@react-navigation/stack'
 import { useAtom } from 'jotai'
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components/native'
-import PinIcon from '@/assets/images/SVGs/Pin.svg'
+import PinIcon from '@/assets/images/SVGs/Location.svg'
 import { screenHeight, screenWidth } from '@/utils/dimensions'
 import { pixelToDpConverter } from '@/utils/pixel'
 import { useGetAddress } from '@/hooks/queries/ReverseGeocode'
@@ -68,7 +68,7 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
           <NaverMapView style={{ flex: 1 }} ref={mapRef} mapPadding={{ bottom: 118 }} onCameraChanged={getCoordinate}>
             <NaverMapMarkerOverlay latitude={33} longitude={127} />
           </NaverMapView>
-          <Pin color={colors.main} />
+          <Pin color={colors.main} width={35} height={43} />
         </MapContainer>
         <BottomContainer>
           <TextContainer>
