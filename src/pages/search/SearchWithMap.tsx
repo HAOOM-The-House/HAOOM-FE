@@ -44,8 +44,8 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
     isFocused && setTabVisibility(false)
   }, [isFocused])
 
-  const [, setPinLongitude] = useAtom(pinLongitudeAtom)
-  const [, setPinLatitude] = useAtom(pinLatitudeAtom)
+  const [longitude, setPinLongitude] = useAtom(pinLongitudeAtom)
+  const [latitude, setPinLatitude] = useAtom(pinLatitudeAtom)
   const getCoordinate = async () => {
     const data = await mapRef.current?.screenToCoordinate({
       screenX: pixelToDpConverter(screenWidth / 2),
@@ -65,7 +65,13 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
       <Container>
         <Header title="지도에서 위치 찾기" showLeftIcon onPressLeftIcon={onPressBackBtn} />
         <MapContainer onLayout={getMapHeight}>
-          <NaverMapView style={{ flex: 1 }} ref={mapRef} mapPadding={{ bottom: 118 }} onCameraChanged={getCoordinate}>
+          <NaverMapView
+            style={{ flex: 1 }}
+            ref={mapRef}
+            mapPadding={{ bottom: 118 }}
+            onCameraChanged={getCoordinate}
+            initialCamera={{ latitude: latitude, longitude: longitude, zoom: 15 }}
+          >
             <NaverMapMarkerOverlay latitude={33} longitude={127} />
           </NaverMapView>
           <Pin color={colors.main} width={35} height={43} />

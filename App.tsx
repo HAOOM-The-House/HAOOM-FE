@@ -7,8 +7,8 @@ import * as SplashScreen from 'expo-splash-screen'
 import { useCallback, useEffect, useState } from 'react'
 import * as Location from 'expo-location'
 import { useAtom } from 'jotai'
-import { locationAtom } from '@/states/location'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { pinLatitudeAtom, pinLongitudeAtom } from '@/states/searchAtom'
 
 if (__DEV__) {
   require('./ReactotronConfig')
@@ -19,7 +19,8 @@ SplashScreen.preventAutoHideAsync()
 const queryClient = new QueryClient()
 
 export default function App() {
-  const [, setLocation] = useAtom(locationAtom)
+  const [, setPinLongitude] = useAtom(pinLongitudeAtom)
+  const [, setPinLatitude] = useAtom(pinLatitudeAtom)
 
   useEffect(() => {
     ;(async () => {
@@ -29,8 +30,9 @@ export default function App() {
         return
       }
 
-      let location = await Location.getCurrentPositionAsync()
-      setLocation(location)
+      const location = await Location.getCurrentPositionAsync()
+      setPinLatitude(location.coords.latitude)
+      setPinLongitude(Math.abs(location.coords.longitude))
     })()
   }, [])
 
