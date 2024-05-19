@@ -3,6 +3,7 @@ import { atom } from 'jotai'
 
 export const SearchTextAtom = atom<string>('')
 
+export const pinAddressAtom = atom<string>('')
 export const pinCoordinateAtom = atom<Coord>({
   longitude: 0,
   latitude: 0,

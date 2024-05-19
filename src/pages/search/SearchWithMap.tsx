@@ -2,7 +2,7 @@ import Header from '@/components/Header'
 import ScreenLayout from '@/components/ScreenLayout'
 import { SearchNavParams } from '@/navigators/SearchNav'
 import { tabVisibilityAtom } from '@/states/globalAtom'
-import { SearchTextAtom, pinCoordinateAtom } from '@/states/searchAtom'
+import { SearchTextAtom, pinAddressAtom, pinCoordinateAtom } from '@/states/searchAtom'
 import { colors } from '@/utils/colors'
 import { NaverMapMarkerOverlay, NaverMapView, NaverMapViewRef } from '@mj-studio/react-native-naver-map'
 import { useIsFocused } from '@react-navigation/core'
@@ -34,10 +34,9 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
     navigation.goBack()
   }
 
-  const [address, setAddress] = useState<string>('')
+  const [pinAddress, setPinAddress] = useAtom(pinAddressAtom)
   const onPressSettingBtn = () => {
-    const address = getAddress(addressInfo?.results[0].region as Region)
-    setSearchText(address)
+    setSearchText(pinAddress)
     navigation.goBack()
   }
 
@@ -63,7 +62,7 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
 
   useEffect(() => {
     const address = getAddress(addressInfo?.results[0].region as Region)
-    setAddress(address)
+    address.length !== 0 && setPinAddress(address)
   }, [addressInfo])
 
   return (
@@ -84,7 +83,7 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
         </MapContainer>
         <BottomContainer>
           <TextContainer>
-            <Address>{address}</Address>
+            <Address>{pinAddress}</Address>
           </TextContainer>
           <SettingBtn onPress={onPressSettingBtn}>
             <SettingText>선택한 위치로 설정</SettingText>
