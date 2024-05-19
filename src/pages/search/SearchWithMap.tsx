@@ -2,7 +2,7 @@ import Header from '@/components/Header'
 import ScreenLayout from '@/components/ScreenLayout'
 import { SearchNavParams } from '@/navigators/SearchNav'
 import { tabVisibilityAtom } from '@/states/globalAtom'
-import { SearchTextAtom, pinLatitudeAtom, pinLongitudeAtom } from '@/states/searchAtom'
+import { SearchTextAtom, pinCoordinateAtom } from '@/states/searchAtom'
 import { colors } from '@/utils/colors'
 import { NaverMapMarkerOverlay, NaverMapView, NaverMapViewRef } from '@mj-studio/react-native-naver-map'
 import { useIsFocused } from '@react-navigation/core'
@@ -45,15 +45,15 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
     isFocused && setTabVisibility(false)
   }, [isFocused])
 
-  const [longitude, setPinLongitude] = useAtom(pinLongitudeAtom)
-  const [latitude, setPinLatitude] = useAtom(pinLatitudeAtom)
+  const [pinCoordinate, setPinCoordinate] = useAtom(pinCoordinateAtom)
   const getCoordinate = async () => {
     const data = await mapRef.current?.screenToCoordinate({
       screenX: pixelToDpConverter(screenWidth / 2),
       screenY: pixelToDpConverter((mapHeight - 118) / 2 + 118),
     })
-    setPinLongitude(Number(data?.longitude))
-    setPinLatitude(Number(data?.latitude))
+    const latitude = Number(data?.latitude)
+    const longitude = Number(data?.longitude)
+    setPinCoordinate({ latitude, longitude })
   }
 
   const getMapHeight = (event: LayoutChangeEvent) => {
@@ -76,7 +76,7 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
             ref={mapRef}
             mapPadding={{ bottom: 118 }}
             onCameraChanged={getCoordinate}
-            initialCamera={{ latitude: latitude, longitude: longitude, zoom: 15 }}
+            initialCamera={{ ...pinCoordinate, zoom: 15 }}
           >
             <NaverMapMarkerOverlay latitude={33} longitude={127} />
           </NaverMapView>
@@ -129,6 +129,7 @@ const Address = styled.Text`
   font-family: 'Medium';
   font-size: 16px;
   color: ${colors.black};
+  height: 20px;
 `
 const SettingBtn = styled.TouchableOpacity`
   border-radius: 6px;
