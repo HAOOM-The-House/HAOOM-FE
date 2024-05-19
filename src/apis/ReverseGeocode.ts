@@ -18,7 +18,7 @@ interface Address {
   }
   region: Region
 }
-interface Region {
+export interface Region {
   area0: Area
   area1: Area
   area2: Area

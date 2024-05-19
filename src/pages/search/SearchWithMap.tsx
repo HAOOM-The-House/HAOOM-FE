@@ -2,23 +2,31 @@ import Header from '@/components/Header'
 import ScreenLayout from '@/components/ScreenLayout'
 import { SearchNavParams } from '@/navigators/SearchNav'
 import { tabVisibilityAtom } from '@/states/globalAtom'
-import { SearchTextAtom } from '@/states/searchAtom'
+import { SearchTextAtom, pinLatitudeAtom, pinLongitudeAtom } from '@/states/searchAtom'
 import { colors } from '@/utils/colors'
 import { NaverMapMarkerOverlay, NaverMapView, NaverMapViewRef } from '@mj-studio/react-native-naver-map'
 import { useIsFocused } from '@react-navigation/core'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useAtom } from 'jotai'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components/native'
 import PinIcon from '@/assets/images/SVGs/Pin.svg'
 import { screenHeight, screenWidth } from '@/utils/dimensions'
 import { pixelToDpConverter } from '@/utils/pixel'
+import { useGetAddress } from '@/hooks/queries/ReverseGeocode'
+import { LayoutChangeEvent } from 'react-native'
+import { getAddress } from '@/utils/address'
+import { Region } from '@/apis/ReverseGeocode'
 
 type SearchWithMapProps = StackScreenProps<SearchNavParams, 'SearchMap'>
 
 export default function SearchWithMap({ navigation }: SearchWithMapProps) {
   const mapRef = useRef<NaverMapViewRef>(null)
+  const [mapHeight, setMapHeight] = useState<number>(0)
   const isFocused = useIsFocused()
+
+  const { data: addressInfo } = useGetAddress()
+
   const [, setTabVisibility] = useAtom(tabVisibilityAtom)
   const [, setSearchText] = useAtom(SearchTextAtom)
 
@@ -27,7 +35,8 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
   }
 
   const onPressSettingBtn = () => {
-    setSearchText('강남구 삼성동')
+    const address = getAddress(addressInfo?.results[0].region as Region)
+    setSearchText(address)
     navigation.goBack()
   }
 
@@ -35,20 +44,27 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
     isFocused && setTabVisibility(false)
   }, [isFocused])
 
+  const [, setPinLongitude] = useAtom(pinLongitudeAtom)
+  const [, setPinLatitude] = useAtom(pinLatitudeAtom)
   const getCoordinate = async () => {
     const data = await mapRef.current?.screenToCoordinate({
-      screenX: pixelToDpConverter(screenWidth / 2 - 21),
-      screenY: pixelToDpConverter(screenHeight / 2 + 118),
+      screenX: pixelToDpConverter(screenWidth / 2),
+      screenY: pixelToDpConverter((mapHeight - 118) / 2 + 118),
     })
-    // return data
-    console.log(data)
+    setPinLongitude(Number(data?.longitude))
+    setPinLatitude(Number(data?.latitude))
+  }
+
+  const getMapHeight = (event: LayoutChangeEvent) => {
+    const { height } = event.nativeEvent.layout
+    setMapHeight(height)
   }
 
   return (
     <ScreenLayout>
       <Container>
         <Header title="지도에서 위치 찾기" showLeftIcon onPressLeftIcon={onPressBackBtn} />
-        <MapContainer>
+        <MapContainer onLayout={getMapHeight}>
           <NaverMapView style={{ flex: 1 }} ref={mapRef} mapPadding={{ bottom: 118 }} onCameraChanged={getCoordinate}>
             <NaverMapMarkerOverlay latitude={33} longitude={127} />
           </NaverMapView>
@@ -57,7 +73,7 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
         <BottomContainer>
           <TextContainer>
             <Name>하움 삼성점</Name>
-            <Address>서울특별시 강남구 삼성동</Address>
+            <Address>{getAddress(addressInfo?.results[0].region as Region)}</Address>
           </TextContainer>
           <SettingBtn onPress={onPressSettingBtn}>
             <SettingText>선택한 위치로 설정</SettingText>

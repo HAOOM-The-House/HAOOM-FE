@@ -1,9 +1,11 @@
 import { getAddress } from '@/apis/ReverseGeocode'
+import { pinLatitudeAtom, pinLongitudeAtom } from '@/states/searchAtom'
 import { useQuery } from '@tanstack/react-query'
+import { useAtom } from 'jotai'
 
 function useGetAddress() {
-  const longitude = 128.12345
-  const latitude = 37.98776
+  const [longitude] = useAtom(pinLongitudeAtom)
+  const [latitude] = useAtom(pinLatitudeAtom)
   const { data } = useQuery({
     queryKey: ['getAddress'],
     queryFn: () => getAddress({ longitude, latitude }),
