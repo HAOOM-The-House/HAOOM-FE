@@ -4,15 +4,20 @@ import { SearchNavParams } from '@/navigators/SearchNav'
 import { tabVisibilityAtom } from '@/states/globalAtom'
 import { SearchTextAtom } from '@/states/searchAtom'
 import { colors } from '@/utils/colors'
+import { NaverMapMarkerOverlay, NaverMapView, NaverMapViewRef } from '@mj-studio/react-native-naver-map'
 import { useIsFocused } from '@react-navigation/core'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useAtom } from 'jotai'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import styled from 'styled-components/native'
+import PinIcon from '@/assets/images/SVGs/Pin.svg'
+import { screenHeight, screenWidth } from '@/utils/dimensions'
+import { pixelToDpConverter } from '@/utils/pixel'
 
 type SearchWithMapProps = StackScreenProps<SearchNavParams, 'SearchMap'>
 
 export default function SearchWithMap({ navigation }: SearchWithMapProps) {
+  const mapRef = useRef<NaverMapViewRef>(null)
   const isFocused = useIsFocused()
   const [, setTabVisibility] = useAtom(tabVisibilityAtom)
   const [, setSearchText] = useAtom(SearchTextAtom)
@@ -30,11 +35,25 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
     isFocused && setTabVisibility(false)
   }, [isFocused])
 
+  const getCoordinate = async () => {
+    const data = await mapRef.current?.screenToCoordinate({
+      screenX: pixelToDpConverter(screenWidth / 2 - 21),
+      screenY: pixelToDpConverter(screenHeight / 2 + 118),
+    })
+    // return data
+    console.log(data)
+  }
+
   return (
     <ScreenLayout>
       <Container>
         <Header title="지도에서 위치 찾기" showLeftIcon onPressLeftIcon={onPressBackBtn} />
-        <MapContainer />
+        <MapContainer>
+          <NaverMapView style={{ flex: 1 }} ref={mapRef} mapPadding={{ bottom: 118 }} onCameraChanged={getCoordinate}>
+            <NaverMapMarkerOverlay latitude={33} longitude={127} />
+          </NaverMapView>
+          <Pin color={colors.main} />
+        </MapContainer>
         <BottomContainer>
           <TextContainer>
             <Name>하움 삼성점</Name>
@@ -51,16 +70,30 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
 
 const Container = styled.View`
   flex: 1;
+  position: relative;
 `
 const MapContainer = styled.View`
   background-color: ${colors.grey};
   flex: 1;
+  position: relative;
+`
+const left = screenWidth / 2 - 21
+const bottom = screenHeight / 2
+const Pin = styled(PinIcon)`
+  position: absolute;
+  left: ${`${left}px`};
+  bottom: ${`${bottom}px`};
 `
 const BottomContainer = styled.View`
   padding: 20px;
   gap: 15px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
+  height: 118px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: ${colors.white};
 `
 const TextContainer = styled.View`
   gap: 4px;
