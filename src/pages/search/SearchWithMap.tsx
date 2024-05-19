@@ -34,6 +34,7 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
     navigation.goBack()
   }
 
+  const [address, setAddress] = useState<string>('')
   const onPressSettingBtn = () => {
     const address = getAddress(addressInfo?.results[0].region as Region)
     setSearchText(address)
@@ -60,6 +61,11 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
     setMapHeight(height)
   }
 
+  useEffect(() => {
+    const address = getAddress(addressInfo?.results[0].region as Region)
+    setAddress(address)
+  }, [addressInfo])
+
   return (
     <ScreenLayout>
       <Container>
@@ -74,12 +80,11 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
           >
             <NaverMapMarkerOverlay latitude={33} longitude={127} />
           </NaverMapView>
-          <Pin color={colors.main} width={35} height={43} />
+          <Pin width={35} height={43} />
         </MapContainer>
         <BottomContainer>
           <TextContainer>
-            <Name>하움 삼성점</Name>
-            <Address>{getAddress(addressInfo?.results[0].region as Region)}</Address>
+            <Address>{address}</Address>
           </TextContainer>
           <SettingBtn onPress={onPressSettingBtn}>
             <SettingText>선택한 위치로 설정</SettingText>
@@ -99,7 +104,7 @@ const MapContainer = styled.View`
   flex: 1;
   position: relative;
 `
-const left = screenWidth / 2 - 21
+const left = screenWidth / 2 - 17.5
 const bottom = screenHeight / 2
 const Pin = styled(PinIcon)`
   position: absolute;
@@ -120,15 +125,10 @@ const BottomContainer = styled.View`
 const TextContainer = styled.View`
   gap: 4px;
 `
-const Name = styled.Text`
+const Address = styled.Text`
   font-family: 'Medium';
   font-size: 16px;
   color: ${colors.black};
-`
-const Address = styled.Text`
-  font-family: 'Regular';
-  font-size: 15px;
-  color: #888;
 `
 const SettingBtn = styled.TouchableOpacity`
   border-radius: 6px;
