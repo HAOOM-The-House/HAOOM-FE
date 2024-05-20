@@ -4,6 +4,7 @@ import ScreenLayout from '@/components/ScreenLayout'
 import SearchBar from '@/components/search/SearchBar'
 import SearchResult from '@/components/search/SearchResult'
 import SearchTip from '@/components/search/SearchTip'
+import { useGetStoreListByKeyword } from '@/hooks/queries/Store'
 import { BottomTabNavParams } from '@/navigators/BottomTabNav'
 import { SearchNavParams } from '@/navigators/SearchNav'
 import { tabVisibilityAtom } from '@/states/globalAtom'
@@ -22,6 +23,8 @@ export default function SearchMain({ navigation }: SearchMainProps) {
   const isFocused = useIsFocused()
   const [, setTabVisibility] = useAtom(tabVisibilityAtom)
   const [searchText, setSearchText] = useAtom(SearchTextAtom)
+  const { data } = useGetStoreListByKeyword()
+  const storeList = data?.data
 
   const onPressResult = () => {
     navigation.navigate('SearchStore')
@@ -55,9 +58,15 @@ export default function SearchMain({ navigation }: SearchMainProps) {
               <SearchTip />
             ) : (
               <ResultWrapper>
-                <SearchResult name="하움 삼성점" distance={159} number="021234567" onPress={onPressResult} />
-                <SearchResult name="하움 삼성점" distance={159} number="021234567" onPress={onPressResult} />
-                <SearchResult name="하움 삼성점" distance={159} number="021234567" onPress={onPressResult} />
+                {storeList?.map((storeInfo) => (
+                  <SearchResult
+                    name={storeInfo.name}
+                    distance={storeInfo.distance}
+                    number={storeInfo.phoneNumber}
+                    onPress={onPressResult}
+                    key={storeInfo.id}
+                  />
+                ))}
               </ResultWrapper>
             )}
           </ResultContainer>
