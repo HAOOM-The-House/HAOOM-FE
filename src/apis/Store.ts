@@ -18,5 +18,9 @@ async function getStoreListByKeyword(keyword: string, latitude: number, longitud
   const { data } = await api.get(`/v1/shops/search?keyword=${keyword}&latitude=${latitude}&longitude=${longitude}`)
   return data
 }
+async function getStoreListByPin(latitude: number, longitude: number): Promise<StoreListResponse> {
+  const { data } = await api.get(`/v1/shops?latitude=${latitude}&longitude=${longitude}`)
+  return data
+}
 
-export { getStoreListByKeyword }
+export { getStoreListByKeyword, getStoreListByPin }

@@ -1,20 +1,30 @@
-import { getStoreListByKeyword } from '@/apis/Store'
-import { SearchTextAtom, pinCoordinateAtom } from '@/states/searchAtom'
+import { getStoreListByKeyword, getStoreListByPin } from '@/apis/Store'
+import { SearchTextAtom, pinCoordinateAtom, searchByAtom } from '@/states/searchAtom'
 import { useQuery } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 
 function useGetStoreListByKeyword() {
   const [searchText] = useAtom(SearchTextAtom)
   const [coordinate] = useAtom(pinCoordinateAtom)
+  const [searchBy] = useAtom(searchByAtom)
 
-  const latitude = Number(coordinate.latitude.toFixed(6))
-  const longitude = Number(coordinate.longitude.toFixed(6))
   const { data } = useQuery({
     queryKey: ['getStoreListByKeyword', searchText],
-    queryFn: () => getStoreListByKeyword(searchText, latitude, longitude),
-    enabled: searchText.length !== 0,
+    queryFn: () => getStoreListByKeyword(searchText, coordinate.latitude, coordinate.longitude),
+    enabled: searchText.length !== 0 && searchBy === 'keyword',
   })
   return { data }
 }
 
-export { useGetStoreListByKeyword }
+function useGetStoreListByPin() {
+  const [coordinate] = useAtom(pinCoordinateAtom)
+  const [searchBy] = useAtom(searchByAtom)
+
+  return useQuery({
+    queryKey: ['getStoreListByPin'],
+    queryFn: () => getStoreListByPin(coordinate.latitude, coordinate.longitude),
+    enabled: false,
+  })
+}
+
+export { useGetStoreListByKeyword, useGetStoreListByPin }
