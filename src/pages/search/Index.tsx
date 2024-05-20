@@ -4,10 +4,11 @@ import ScreenLayout from '@/components/ScreenLayout'
 import SearchBar from '@/components/search/SearchBar'
 import SearchResult from '@/components/search/SearchResult'
 import SearchTip from '@/components/search/SearchTip'
+import { useGetStoreListByKeyword, useGetStoreListByPin } from '@/hooks/queries/Store'
 import { BottomTabNavParams } from '@/navigators/BottomTabNav'
 import { SearchNavParams } from '@/navigators/SearchNav'
 import { tabVisibilityAtom } from '@/states/globalAtom'
-import { SearchTextAtom } from '@/states/searchAtom'
+import { SearchTextAtom, searchByAtom } from '@/states/searchAtom'
 import { colors } from '@/utils/colors'
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
 import { useIsFocused, useNavigation } from '@react-navigation/native'
@@ -20,11 +21,17 @@ import styled from 'styled-components/native'
 type SearchMainProps = StackScreenProps<SearchNavParams, 'SearchMain'>
 export default function SearchMain({ navigation }: SearchMainProps) {
   const isFocused = useIsFocused()
+
   const [, setTabVisibility] = useAtom(tabVisibilityAtom)
   const [searchText, setSearchText] = useAtom(SearchTextAtom)
+  const [searchBy] = useAtom(searchByAtom)
 
-  const onPressResult = () => {
-    navigation.navigate('SearchStore')
+  const { data: storeListByKeyword } = useGetStoreListByKeyword()
+  const { data: storeListByPin } = useGetStoreListByPin()
+  const storeList = searchBy === 'keyword' ? storeListByKeyword?.data : storeListByPin?.data
+
+  const onPressResult = (storeId: number) => {
+    navigation.navigate('SearchStore', { storeId })
   }
 
   const onPressFindWithCurrentLocation = () => {
@@ -38,6 +45,7 @@ export default function SearchMain({ navigation }: SearchMainProps) {
   useEffect(() => {
     isFocused && setTabVisibility(true)
   }, [isFocused])
+
   return (
     <ScreenLayout>
       <TouchableWithoutFeedback onPress={dismissKeyboard} style={{ flex: 1 }}>
@@ -55,9 +63,15 @@ export default function SearchMain({ navigation }: SearchMainProps) {
               <SearchTip />
             ) : (
               <ResultWrapper>
-                <SearchResult name="하움 삼성점" distance={159} number="021234567" onPress={onPressResult} />
-                <SearchResult name="하움 삼성점" distance={159} number="021234567" onPress={onPressResult} />
-                <SearchResult name="하움 삼성점" distance={159} number="021234567" onPress={onPressResult} />
+                {storeList?.map((storeInfo) => (
+                  <SearchResult
+                    name={storeInfo.name}
+                    distance={storeInfo.distance}
+                    number={storeInfo.phoneNumber}
+                    onPress={() => onPressResult(storeInfo.id)}
+                    key={storeInfo.id}
+                  />
+                ))}
               </ResultWrapper>
             )}
           </ResultContainer>

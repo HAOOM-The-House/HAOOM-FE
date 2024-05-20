@@ -3,6 +3,8 @@ import styled from 'styled-components/native'
 import SearchIcon from '@/assets/images/SVGs/Search.svg'
 import CloseIcon from '@/assets/images/SVGs/Close.svg'
 import { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native'
+import { useAtom } from 'jotai'
+import { searchByAtom } from '@/states/searchAtom'
 
 interface SearchBarProps {
   value: string
@@ -10,8 +12,15 @@ interface SearchBarProps {
 }
 
 export default function SearchBar({ value, setValue }: SearchBarProps) {
+  const [, setSearchBy] = useAtom(searchByAtom)
+
   const onPressResetBtn = () => {
     setValue('')
+  }
+
+  const onChangeText = (input: string) => {
+    setValue(input)
+    setSearchBy('keyword')
   }
   return (
     <Container>
@@ -21,7 +30,7 @@ export default function SearchBar({ value, setValue }: SearchBarProps) {
         placeholder="도로명, 건물명 또는 지번으로 검색"
         autoFocus
         value={value}
-        onChangeText={(input: string) => setValue(input)}
+        onChangeText={onChangeText}
         autoCapitalize="none"
       />
       {value.length !== 0 && (

@@ -1,6 +1,8 @@
 import styled from 'styled-components/native'
 import LocationIcon from '@/assets/images/SVGs/Location.svg'
 import { colors } from '@/utils/colors'
+import { getNumber } from '@/utils/number'
+import { getDistance } from '@/utils/distance'
 
 interface SearchResultProps {
   name: string
@@ -10,37 +12,13 @@ interface SearchResultProps {
 }
 
 export default function SearchResult({ name, distance, number, onPress }: SearchResultProps) {
-  const getDistance = () => {
-    if (distance >= 1000) {
-      const kilometer = distance / 1000
-      if (Number.isInteger(kilometer)) return String(kilometer) + 'KM'
-      else return String(kilometer.toFixed(1)) + 'KM'
-    } else {
-      return String(distance) + 'M'
-    }
-  }
-
-  const getNumber = () => {
-    if (number.length === 8) {
-      return number.replace(/(\d{4})(\d{4})/, '$1-$2')
-    } else if (number.length === 9) {
-      return number.replace(/(\d{2})(\d{3})(\d{4})/, '$1-$2-$3')
-    } else if (number.length === 10) {
-      return number.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')
-    } else if (number.length === 11) {
-      return number.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
-    } else {
-      return number
-    }
-  }
-
   return (
     <Container onPress={onPress}>
       <LocationIcon width={20} height={20} />
       <TextContainer>
         <Name>{name}</Name>
         <Detail>
-          {getDistance()} / {getNumber()}
+          {getDistance(distance)} / {getNumber(number)}
         </Detail>
       </TextContainer>
     </Container>

@@ -8,3 +8,6 @@ export const pinCoordinateAtom = atom<Coord>({
   longitude: 0,
   latitude: 0,
 })
+
+export type SearchBy = 'pin' | 'keyword'
+export const searchByAtom = atom<SearchBy>('pin')

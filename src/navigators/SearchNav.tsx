@@ -8,8 +8,8 @@ import SearchProduct from '@/pages/search/ProductDetail'
 export type SearchNavParams = {
   SearchMain: undefined
   SearchMap: undefined
-  SearchStore: undefined
-  SearchProduct: undefined
+  SearchStore: { storeId: number }
+  SearchProduct: { productId: number; number: string; storeName: string }
 }
 
 const Stack = createStackNavigator<SearchNavParams>()
