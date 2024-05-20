@@ -10,7 +10,7 @@ function useGetStoreListByKeyword() {
   const latitude = Number(coordinate.latitude.toFixed(6))
   const longitude = Number(coordinate.longitude.toFixed(6))
   const { data } = useQuery({
-    queryKey: ['getStoreListByKeyword'],
+    queryKey: ['getStoreListByKeyword', searchText],
     queryFn: () => getStoreListByKeyword(searchText, latitude, longitude),
     enabled: searchText.length !== 0,
   })
