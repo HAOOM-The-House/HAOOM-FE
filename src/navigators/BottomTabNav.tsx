@@ -1,5 +1,4 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import HomeNav from './HomeNav'
 import SearchNav from './SearchNav'
 import styled from 'styled-components/native'
 import { colors } from '@/utils/colors'
@@ -10,9 +9,10 @@ import AskMain from '@/pages/inquire/Index'
 import { Platform } from 'react-native'
 import { useAtom } from 'jotai'
 import { tabVisibilityAtom } from '@/states/globalAtom'
+import HomeMain from '@/pages/home/Index'
 
 export type BottomTabNavParams = {
-  HomeNav: undefined
+  HomeMain: undefined
   SearchNav: undefined
   AskMain: undefined
 }
@@ -37,8 +37,8 @@ export default function BottomTabNav() {
       }}
     >
       <Tab.Screen
-        name="HomeNav"
-        component={HomeNav}
+        name="HomeMain"
+        component={HomeMain}
         options={{
           tabBarIcon: ({ focused }) => (
             <TabWrapper>
