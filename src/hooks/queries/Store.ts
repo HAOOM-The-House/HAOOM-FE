@@ -1,6 +1,6 @@
-import { getStoreListByKeyword, getStoreListByPin } from '@/apis/Store'
+import { StoreDetail, getStoreInfo, getStoreListByKeyword, getStoreListByPin } from '@/apis/Store'
 import { SearchTextAtom, pinCoordinateAtom, searchByAtom } from '@/states/searchAtom'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 
 function useGetStoreListByKeyword() {
@@ -26,5 +26,14 @@ function useGetStoreListByPin() {
     enabled: false,
   })
 }
+function useGetStoreInfo(storeId: number) {
+  const { data } = useSuspenseQuery({
+    queryKey: ['getStoreInfo', storeId],
+    queryFn: () => getStoreInfo(storeId),
+  })
 
-export { useGetStoreListByKeyword, useGetStoreListByPin }
+  const storeInfo = data?.data as StoreDetail
+  return { storeInfo }
+}
+
+export { useGetStoreListByKeyword, useGetStoreListByPin, useGetStoreInfo }

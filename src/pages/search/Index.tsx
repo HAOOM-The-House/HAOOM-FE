@@ -30,8 +30,8 @@ export default function SearchMain({ navigation }: SearchMainProps) {
   const { data: storeListByPin } = useGetStoreListByPin()
   const storeList = searchBy === 'keyword' ? storeListByKeyword?.data : storeListByPin?.data
 
-  const onPressResult = () => {
-    navigation.navigate('SearchStore')
+  const onPressResult = (storeId: number) => {
+    navigation.navigate('SearchStore', { storeId })
   }
 
   const onPressFindWithCurrentLocation = () => {
@@ -68,7 +68,7 @@ export default function SearchMain({ navigation }: SearchMainProps) {
                     name={storeInfo.name}
                     distance={storeInfo.distance}
                     number={storeInfo.phoneNumber}
-                    onPress={onPressResult}
+                    onPress={() => onPressResult(storeInfo.id)}
                     key={storeInfo.id}
                   />
                 ))}

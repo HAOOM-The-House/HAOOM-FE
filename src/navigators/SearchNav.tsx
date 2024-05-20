@@ -8,7 +8,7 @@ import SearchProduct from '@/pages/search/ProductDetail'
 export type SearchNavParams = {
   SearchMain: undefined
   SearchMap: undefined
-  SearchStore: undefined
+  SearchStore: { storeId: number }
   SearchProduct: undefined
 }
 
