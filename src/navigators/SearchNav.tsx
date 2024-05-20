@@ -9,7 +9,7 @@ export type SearchNavParams = {
   SearchMain: undefined
   SearchMap: undefined
   SearchStore: { storeId: number }
-  SearchProduct: undefined
+  SearchProduct: { productId: number; number: string; storeName: string }
 }
 
 const Stack = createStackNavigator<SearchNavParams>()

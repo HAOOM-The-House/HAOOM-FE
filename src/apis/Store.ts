@@ -41,6 +41,15 @@ export interface Product {
   thumbnailUrl: string
 }
 
+interface ProductInfoResponse {
+  data: ProductDetail
+}
+export interface ProductDetail {
+  name: string
+  content: string
+  imgUrls: string[]
+}
+
 async function getStoreListByKeyword(keyword: string, latitude: number, longitude: number): Promise<StoreListResponse> {
   const { data } = await api.get(`/v1/shops/search?keyword=${keyword}&latitude=${latitude}&longitude=${longitude}`)
   return data
@@ -54,5 +63,9 @@ async function getStoreInfo(storeId: number): Promise<StoreInfoResponse> {
   const { data } = await api.get(`/v1/shops/${storeId}`)
   return data
 }
+async function getProductInfo(productId: number): Promise<ProductInfoResponse> {
+  const { data } = await api.get(`/v1/products/${productId}`)
+  return data
+}
 
-export { getStoreListByKeyword, getStoreListByPin, getStoreInfo }
+export { getStoreListByKeyword, getStoreListByPin, getStoreInfo, getProductInfo }

@@ -23,7 +23,7 @@ export default function ProductList({ navigation, route }: ProductListProps) {
   const { storeInfo } = useGetStoreInfo(route.params.storeId)
 
   const onPressProduct = (productId: number) => {
-    navigation.navigate('SearchProduct')
+    navigation.navigate('SearchProduct', { productId, number: storeInfo.phoneNumber, storeName: storeInfo.name })
   }
   const onPressBackBtn = () => {
     navigation.goBack()
