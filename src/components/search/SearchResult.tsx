@@ -1,6 +1,7 @@
 import styled from 'styled-components/native'
 import LocationIcon from '@/assets/images/SVGs/Location.svg'
 import { colors } from '@/utils/colors'
+import { getNumber } from '@/utils/number'
 
 interface SearchResultProps {
   name: string
@@ -20,27 +21,13 @@ export default function SearchResult({ name, distance, number, onPress }: Search
     }
   }
 
-  const getNumber = () => {
-    if (number.length === 8) {
-      return number.replace(/(\d{4})(\d{4})/, '$1-$2')
-    } else if (number.length === 9) {
-      return number.replace(/(\d{2})(\d{3})(\d{4})/, '$1-$2-$3')
-    } else if (number.length === 10) {
-      return number.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')
-    } else if (number.length === 11) {
-      return number.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
-    } else {
-      return number
-    }
-  }
-
   return (
     <Container onPress={onPress}>
       <LocationIcon width={20} height={20} />
       <TextContainer>
         <Name>{name}</Name>
         <Detail>
-          {getDistance()} / {getNumber()}
+          {getDistance()} / {getNumber(number)}
         </Detail>
       </TextContainer>
     </Container>

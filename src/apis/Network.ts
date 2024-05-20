@@ -1,6 +1,11 @@
-import { clientId, clientSecret } from '@/constants/env'
 import axios from 'axios'
 import { SERVER_URL, NAVER_CLIENT_ID, NAVER_CLIENT_SECRET } from '@env'
+
+interface apiResponse {
+  isSuccess: boolean
+  code: string
+  message: string
+}
 
 const api = axios.create({
   baseURL: SERVER_URL,
@@ -23,4 +28,4 @@ const geocodeAPI = axios.create({
   },
 })
 
-export { api, geocodeAPI }
+export { api, geocodeAPI, apiResponse }
