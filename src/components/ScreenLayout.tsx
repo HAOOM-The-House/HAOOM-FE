@@ -1,7 +1,7 @@
 import styled from 'styled-components/native'
 import React from 'react'
-import { StatusBar } from 'expo-status-bar'
 import { Platform } from 'react-native'
+import { StatusBar } from 'react-native'
 
 interface ScreenLayoutProps {
   children: React.ReactNode
@@ -10,8 +10,9 @@ interface ScreenLayoutProps {
 
 export default function ScreenLayout({ children, background = 'white' }: ScreenLayoutProps) {
   return (
-    <ScreenContainer style={{ backgroundColor: background }}>
-      {Platform.OS === 'ios' && <StatusBar />}
+    <ScreenContainer
+      style={{ backgroundColor: background, paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}
+    >
       {children}
     </ScreenContainer>
   )
