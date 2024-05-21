@@ -8,7 +8,7 @@ import { NaverMapMarkerOverlay, NaverMapView, NaverMapViewRef } from '@mj-studio
 import { useIsFocused } from '@react-navigation/core'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useAtom } from 'jotai'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components/native'
 import PinIcon from '@/assets/images/SVGs/Location.svg'
 import { screenHeight, screenWidth } from '@/utils/dimensions'
@@ -18,6 +18,9 @@ import { LayoutChangeEvent } from 'react-native'
 import { getAddress } from '@/utils/address'
 import { Region } from '@/apis/ReverseGeocode'
 import { useGetStoreListByPin } from '@/hooks/queries/Store'
+import * as Location from 'expo-location'
+import { getCurrentCoordinate } from '@/utils/location'
+import { useFocusEffect } from '@react-navigation/native'
 
 type SearchWithMapProps = StackScreenProps<SearchNavParams, 'SearchMap'>
 
@@ -33,10 +36,6 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
   const [, setSearchBy] = useAtom(searchByAtom)
 
   const { data: addressInfo } = useGetAddress()
-
-  useEffect(() => {
-    isFocused && setTabVisibility(false)
-  }, [isFocused])
 
   useEffect(() => {
     const address = getAddress(addressInfo?.results[0].region as Region)
@@ -69,6 +68,23 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
     const longitude = Number(data?.longitude)
     setPinCoordinate({ latitude, longitude })
   }
+
+  const moveCamera = () => {
+    getCurrentCoordinate().then((current) => {
+      mapRef.current?.animateCameraTo({ latitude: current.latitude, longitude: current.longitude, zoom: 15 })
+    })
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      setTabVisibility(false)
+      moveCamera()
+
+      return () => {
+        setTabVisibility(true)
+      }
+    }, [])
+  )
 
   return (
     <ScreenLayout>
