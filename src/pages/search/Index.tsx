@@ -7,10 +7,13 @@ import SearchTip from '@/components/search/SearchTip'
 import { useGetStoreListByKeyword, useGetStoreListByPin } from '@/hooks/queries/Store'
 import { BottomTabNavParams } from '@/navigators/BottomTabNav'
 import { SearchNavParams } from '@/navigators/SearchNav'
-import { SearchTextAtom, searchByAtom } from '@/states/searchAtom'
+import { SearchTextAtom, pinCoordinateAtom, searchByAtom } from '@/states/searchAtom'
 import { colors } from '@/utils/colors'
+import { getCurrentCoordinate } from '@/utils/location'
+import { Coord } from '@mj-studio/react-native-naver-map'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useAtom } from 'jotai'
+import { useEffect } from 'react'
 import { Keyboard, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import styled from 'styled-components/native'
 
@@ -18,6 +21,7 @@ type SearchMainProps = StackScreenProps<SearchNavParams, 'SearchMain'>
 export default function SearchMain({ navigation }: SearchMainProps) {
   const [searchText, setSearchText] = useAtom(SearchTextAtom)
   const [searchBy] = useAtom(searchByAtom)
+  const [, setCoordinate] = useAtom(pinCoordinateAtom)
 
   const { data: storeListByKeyword } = useGetStoreListByKeyword()
   const { data: storeListByPin } = useGetStoreListByPin()
@@ -34,6 +38,10 @@ export default function SearchMain({ navigation }: SearchMainProps) {
   const dismissKeyboard = () => {
     Keyboard.dismiss()
   }
+
+  useEffect(() => {
+    getCurrentCoordinate().then((current: Coord) => setCoordinate(current))
+  }, [])
 
   return (
     <ScreenLayout>
