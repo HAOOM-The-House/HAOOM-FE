@@ -4,7 +4,7 @@ import { SearchNavParams } from '@/navigators/SearchNav'
 import { tabVisibilityAtom } from '@/states/globalAtom'
 import { SearchTextAtom, pinAddressAtom, pinCoordinateAtom, searchByAtom } from '@/states/searchAtom'
 import { colors } from '@/utils/colors'
-import { NaverMapMarkerOverlay, NaverMapView, NaverMapViewRef } from '@mj-studio/react-native-naver-map'
+import { Coord, NaverMapMarkerOverlay, NaverMapView, NaverMapViewRef } from '@mj-studio/react-native-naver-map'
 import { useIsFocused } from '@react-navigation/core'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useAtom } from 'jotai'
@@ -70,7 +70,8 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
   }
 
   const moveCamera = () => {
-    getCurrentCoordinate().then((current) => {
+    getCurrentCoordinate().then((current: Coord) => {
+      setPinCoordinate(current)
       mapRef.current?.animateCameraTo({ latitude: current.latitude, longitude: current.longitude, zoom: 15 })
     })
   }
