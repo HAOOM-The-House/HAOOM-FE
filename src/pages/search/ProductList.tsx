@@ -39,7 +39,10 @@ export default function ProductList({ navigation, route }: ProductListProps) {
 
   const renderItem = ({ item: { id, thumbnailUrl, name } }: { item: Product }) => (
     <ImgWrapper onPress={() => onPressProduct(id)}>
-      <Image style={{ width: '100%', height: '100%', resizeMode: 'cover' }} source={{ uri: thumbnailUrl }} />
+      <Image
+        style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 6 }}
+        source={{ uri: thumbnailUrl }}
+      />
     </ImgWrapper>
   )
 
@@ -96,7 +99,6 @@ const Detail = styled.Text`
 `
 const width = screenWidth / 2 - 26
 const ImgWrapper = styled.TouchableOpacity`
-  background-color: #d9d9d9;
   border-radius: 6px;
   aspect-ratio: 0.7;
   width: ${`${width}px`};

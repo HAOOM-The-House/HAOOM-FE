@@ -40,7 +40,10 @@ export default function ProductDetail({ navigation, route }: ProductDetailProps)
           <ImageContainer showsVerticalScrollIndicator={false}>
             {productInfo.imgUrls.map((path) => (
               <ImageWrapper key={path}>
-                <Image source={{ uri: path }} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
+                <Image
+                  source={{ uri: path }}
+                  style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 6 }}
+                />
               </ImageWrapper>
             ))}
           </ImageContainer>
@@ -97,7 +100,6 @@ const ImageContainer = styled.ScrollView`
 const ImageWrapper = styled.View`
   border-radius: 6px;
   width: 100%;
-  background-color: #d9d9d9;
   aspect-ratio: 0.7;
   margin-bottom: 10px;
 `
