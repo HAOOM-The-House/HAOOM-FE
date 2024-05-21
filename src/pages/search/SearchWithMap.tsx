@@ -150,7 +150,7 @@ const Address = styled.Text`
   font-family: 'Medium';
   font-size: 16px;
   color: ${colors.black};
-  height: 20px;
+  line-height: 20px;
 `
 const SettingBtn = styled.TouchableOpacity`
   border-radius: 6px;

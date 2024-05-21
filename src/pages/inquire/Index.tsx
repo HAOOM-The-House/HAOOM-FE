@@ -6,6 +6,7 @@ import { colors } from '@/utils/colors'
 import { getNumber } from '@/utils/number'
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
 import { useNavigation } from '@react-navigation/native'
+import { Suspense } from 'react'
 import styled from 'styled-components/native'
 
 export default function AskMain() {
@@ -16,7 +17,9 @@ export default function AskMain() {
       <Container>
         <Description>가맹점 문의에 대한 궁금하신 사항은{'\n'}하단 연락처로 문의해주세요!</Description>
         <NumberContainer>
-          <Number>{getNumber(number)}</Number>
+          <Suspense>
+            <Number>{getNumber(number)}</Number>
+          </Suspense>
         </NumberContainer>
       </Container>
     </ScreenLayout>

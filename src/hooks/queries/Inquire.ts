@@ -1,8 +1,8 @@
 import { getContactNumber } from '@/apis/Inquire'
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 
 function useGetContactNumber() {
-  const { data } = useQuery({
+  const { data } = useSuspenseQuery({
     queryKey: ['getContactNumber'],
     queryFn: () => getContactNumber(),
   })
