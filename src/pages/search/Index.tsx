@@ -7,22 +7,15 @@ import SearchTip from '@/components/search/SearchTip'
 import { useGetStoreListByKeyword, useGetStoreListByPin } from '@/hooks/queries/Store'
 import { BottomTabNavParams } from '@/navigators/BottomTabNav'
 import { SearchNavParams } from '@/navigators/SearchNav'
-import { tabVisibilityAtom } from '@/states/globalAtom'
 import { SearchTextAtom, searchByAtom } from '@/states/searchAtom'
 import { colors } from '@/utils/colors'
-import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
-import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useAtom } from 'jotai'
-import { useEffect, useState } from 'react'
 import { Keyboard, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import styled from 'styled-components/native'
 
 type SearchMainProps = StackScreenProps<SearchNavParams, 'SearchMain'>
 export default function SearchMain({ navigation }: SearchMainProps) {
-  const isFocused = useIsFocused()
-
-  const [, setTabVisibility] = useAtom(tabVisibilityAtom)
   const [searchText, setSearchText] = useAtom(SearchTextAtom)
   const [searchBy] = useAtom(searchByAtom)
 
@@ -41,10 +34,6 @@ export default function SearchMain({ navigation }: SearchMainProps) {
   const dismissKeyboard = () => {
     Keyboard.dismiss()
   }
-
-  useEffect(() => {
-    isFocused && setTabVisibility(true)
-  }, [isFocused])
 
   return (
     <ScreenLayout>

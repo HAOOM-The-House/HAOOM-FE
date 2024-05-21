@@ -3,9 +3,8 @@ import ScreenLayout from '@/components/ScreenLayout'
 import { SearchNavParams } from '@/navigators/SearchNav'
 import { colors } from '@/utils/colors'
 import { screenWidth } from '@/utils/dimensions'
-import { useIsFocused } from '@react-navigation/core'
 import { StackScreenProps } from '@react-navigation/stack'
-import { Suspense, useEffect } from 'react'
+import { Suspense, useCallback } from 'react'
 import styled from 'styled-components/native'
 import { tabVisibilityAtom } from '@/states/globalAtom'
 import { useAtom } from 'jotai'
@@ -13,11 +12,11 @@ import { useGetStoreInfo } from '@/hooks/queries/Store'
 import { getNumber } from '@/utils/number'
 import { Product } from '@/apis/Store'
 import { ActivityIndicator, FlatList, Image } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
 
 type ProductListProps = StackScreenProps<SearchNavParams, 'SearchStore'>
 
 export default function ProductList({ navigation, route }: ProductListProps) {
-  const isFocused = useIsFocused()
   const [, setTabVisibility] = useAtom(tabVisibilityAtom)
 
   const { storeInfo } = useGetStoreInfo(route.params.storeId)
@@ -29,9 +28,14 @@ export default function ProductList({ navigation, route }: ProductListProps) {
     navigation.goBack()
   }
 
-  useEffect(() => {
-    isFocused && setTabVisibility(false)
-  }, [isFocused])
+  useFocusEffect(
+    useCallback(() => {
+      setTabVisibility(false)
+      return () => {
+        setTabVisibility(true)
+      }
+    }, [])
+  )
 
   const renderItem = ({ item: { id, thumbnailUrl, name } }: { item: Product }) => (
     <ImgWrapper onPress={() => onPressProduct(id)}>

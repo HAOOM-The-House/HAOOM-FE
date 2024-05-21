@@ -3,25 +3,20 @@ import ScreenLayout from '@/components/ScreenLayout'
 import { SearchNavParams } from '@/navigators/SearchNav'
 import { tabVisibilityAtom } from '@/states/globalAtom'
 import { colors } from '@/utils/colors'
-import { useIsFocused } from '@react-navigation/native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useAtom } from 'jotai'
-import { Suspense, useEffect } from 'react'
+import { Suspense, useCallback } from 'react'
 import styled from 'styled-components/native'
 import * as Linking from 'expo-linking'
 import { useGetProductInfo } from '@/hooks/queries/Store'
 import { ActivityIndicator, Image } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
 
 type ProductDetailProps = StackScreenProps<SearchNavParams, 'SearchProduct'>
 
 export default function ProductDetail({ navigation, route }: ProductDetailProps) {
-  const isFocused = useIsFocused()
   const [, setTabVisibility] = useAtom(tabVisibilityAtom)
   const { productInfo } = useGetProductInfo(route.params.productId)
-
-  useEffect(() => {
-    isFocused && setTabVisibility(false)
-  }, [isFocused])
 
   const onPressBackBtn = () => {
     navigation.goBack()
@@ -30,6 +25,8 @@ export default function ProductDetail({ navigation, route }: ProductDetailProps)
   const onPressInquireBtn = () => {
     Linking.openURL(`sms:${route.params.number}`)
   }
+
+  useFocusEffect(useCallback(() => setTabVisibility(false), []))
 
   return (
     <ScreenLayout>
