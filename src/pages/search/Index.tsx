@@ -55,7 +55,7 @@ export default function SearchMain({ navigation }: SearchMainProps) {
             </TouchableOpacity>
           </SearchContainer>
           <Divider height={8} />
-          <ResultContainer>
+          <ResultContainer showsVerticalScrollIndicator={false}>
             {searchText.length === 0 ? (
               <SearchTip />
             ) : (
@@ -93,7 +93,7 @@ const FindAddressText = styled.Text`
   color: ${colors.black};
   font-size: 16px;
 `
-const ResultContainer = styled.View`
+const ResultContainer = styled.ScrollView`
   width: 100%;
   padding: 0 20px;
 `
