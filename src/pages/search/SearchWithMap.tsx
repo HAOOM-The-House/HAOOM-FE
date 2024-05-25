@@ -137,7 +137,6 @@ const BottomContainer = styled.View`
   gap: 15px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
-  height: 118px;
   position: absolute;
   bottom: 0;
   width: 100%;

@@ -2,7 +2,7 @@ import Header from '@/components/Header'
 import ScreenLayout from '@/components/ScreenLayout'
 import { SearchNavParams } from '@/navigators/SearchNav'
 import { colors } from '@/utils/colors'
-import { screenWidth } from '@/utils/dimensions'
+import { screenHeight, screenWidth } from '@/utils/dimensions'
 import { StackScreenProps } from '@react-navigation/stack'
 import { Suspense, useCallback } from 'react'
 import styled from 'styled-components/native'
@@ -47,8 +47,8 @@ export default function ProductList({ navigation, route }: ProductListProps) {
   )
 
   return (
-    <ScreenLayout>
-      <Suspense fallback={<ActivityIndicator size={'small'} />}>
+    <Suspense fallback={<ActivityIndicator size="large" />}>
+      <ScreenLayout>
         <Container>
           <Header showLeftIcon={true} onPressLeftIcon={onPressBackBtn} />
           <TextContainer>
@@ -62,7 +62,7 @@ export default function ProductList({ navigation, route }: ProductListProps) {
             <FlatList
               data={storeInfo.products}
               renderItem={renderItem}
-              contentContainerStyle={{ gap: 12 }}
+              contentContainerStyle={{ gap: 12, paddingBottom: screenHeight * 0.05 }}
               columnWrapperStyle={{ gap: 12 }}
               numColumns={2}
               showsVerticalScrollIndicator={false}
@@ -74,8 +74,8 @@ export default function ProductList({ navigation, route }: ProductListProps) {
             </NoProductWrapper>
           )}
         </Container>
-      </Suspense>
-    </ScreenLayout>
+      </ScreenLayout>
+    </Suspense>
   )
 }
 
