@@ -21,18 +21,30 @@ import styled from 'styled-components/native'
 type SearchMainProps = StackScreenProps<SearchNavParams, 'SearchMain'>
 export default function SearchMain({ navigation }: SearchMainProps) {
   const [searchText, setSearchText] = useAtom(SearchTextAtom)
-  const [searchBy] = useAtom(searchByAtom)
+  const [searchBy, setSearchBy] = useAtom(searchByAtom)
   const [, setCoordinate] = useAtom(pinCoordinateAtom)
 
   const [storeList, setStoreList] = useState<Store[]>()
-  const { data: storeListByKeyword, isLoading, hasNextPage, fetchNextPage } = useGetStoreListByKeyword()
-  const { data: storeListByPin } = useGetStoreListByPin()
+  const {
+    data: storeListByKeyword,
+    isLoading: isLoadingByKeyword,
+    hasNextPage: hasNextPageByKeyword,
+    fetchNextPage: fetchNextPageByKeyword,
+  } = useGetStoreListByKeyword()
+  const {
+    data: storeListByPin,
+    isLoading: isLoadingByPin,
+    hasNextPage: hasNextPageByPin,
+    fetchNextPage: fetchNextPageByPin,
+    refetch,
+  } = useGetStoreListByPin()
 
   const onPressResult = (storeId: number) => {
     navigation.navigate('SearchStore', { storeId })
   }
 
   const onPressFindWithCurrentLocation = () => {
+    setSearchBy('pin')
     navigation.navigate('SearchMap')
   }
 
@@ -51,12 +63,35 @@ export default function SearchMain({ navigation }: SearchMainProps) {
     }
   }, [storeListByKeyword])
 
+  useEffect(() => {
+    if (searchBy === 'pin') {
+      const dataArr = storeListByPin?.pages.map((page) => page.data).flat()
+      setStoreList(dataArr)
+    }
+  }, [storeListByPin])
+
   const renderItem = ({ item: { id, name, phoneNumber, distance } }: { item: Store }) => (
     <SearchResult name={name} distance={distance} number={phoneNumber} onPress={() => onPressResult(id)} key={id} />
   )
 
   const getMoreItem = () => {
-    if (hasNextPage && !isLoading) fetchNextPage()
+    if (searchBy === 'keyword' && hasNextPageByKeyword && !isLoadingByKeyword) fetchNextPageByKeyword()
+    if (searchBy === 'pin' && hasNextPageByPin && !isLoadingByPin) fetchNextPageByPin()
+  }
+
+  const showActivityIndicator = () => {
+    if (searchBy === 'keyword')
+      return hasNextPageByKeyword ? (
+        <Loader>
+          <ActivityIndicator size={'small'} />
+        </Loader>
+      ) : null
+    else
+      return hasNextPageByPin ? (
+        <Loader>
+          <ActivityIndicator size={'small'} />
+        </Loader>
+      ) : null
   }
 
   return (
@@ -80,13 +115,7 @@ export default function SearchMain({ navigation }: SearchMainProps) {
               style={{ flex: 1, paddingHorizontal: 20 }}
               onEndReached={getMoreItem}
               onEndReachedThreshold={0}
-              ListFooterComponent={
-                hasNextPage ? (
-                  <Loader>
-                    <ActivityIndicator size={'small'} />
-                  </Loader>
-                ) : null
-              }
+              ListFooterComponent={showActivityIndicator}
             />
           )}
         </Container>

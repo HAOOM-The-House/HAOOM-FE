@@ -2,7 +2,7 @@ import Header from '@/components/Header'
 import ScreenLayout from '@/components/ScreenLayout'
 import { SearchNavParams } from '@/navigators/SearchNav'
 import { tabVisibilityAtom } from '@/states/globalAtom'
-import { SearchTextAtom, pinAddressAtom, pinCoordinateAtom, searchByAtom } from '@/states/searchAtom'
+import { SearchTextAtom, pinAddressAtom, pinCoordinateAtom } from '@/states/searchAtom'
 import { colors } from '@/utils/colors'
 import { Coord, NaverMapMarkerOverlay, NaverMapView, NaverMapViewRef } from '@mj-studio/react-native-naver-map'
 import { useIsFocused } from '@react-navigation/core'
@@ -33,7 +33,6 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
   const [, setSearchText] = useAtom(SearchTextAtom)
   const [pinCoordinate, setPinCoordinate] = useAtom(pinCoordinateAtom)
   const [pinAddress, setPinAddress] = useAtom(pinAddressAtom)
-  const [, setSearchBy] = useAtom(searchByAtom)
 
   const { data: addressInfo } = useGetAddress()
 
@@ -49,7 +48,6 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
   const { refetch } = useGetStoreListByPin()
   const onPressSettingBtn = () => {
     setSearchText(pinAddress)
-    setSearchBy('pin')
     refetch()
     navigation.goBack()
   }
