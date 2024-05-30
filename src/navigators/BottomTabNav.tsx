@@ -31,6 +31,7 @@ export default function BottomTabNav() {
         tabBarStyle: {
           display: isTabVisible ? 'flex' : 'none',
           height: 82,
+          paddingBottom: Platform.OS === 'android' ? 8 : 0,
           borderTopColor: 'rgba(112, 115, 124, 0.16)',
           borderTopWidth: 0.5,
         },

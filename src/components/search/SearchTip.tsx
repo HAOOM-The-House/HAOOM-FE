@@ -24,9 +24,9 @@ export default function SearchTip() {
 }
 
 const Container = styled.View`
-  width: 100%;
+  flex: 1;
   gap: 15px;
-  padding-top: 22px;
+  padding: 22px 20px 0;
 `
 const Title = styled.Text`
   font-family: 'Bold';

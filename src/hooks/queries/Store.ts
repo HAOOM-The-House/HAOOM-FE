@@ -7,7 +7,7 @@ import {
   getStoreListByPin,
 } from '@/apis/Store'
 import { SearchTextAtom, pinCoordinateAtom, searchByAtom } from '@/states/searchAtom'
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useSuspenseQuery } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 
 function useGetStoreListByKeyword() {
@@ -15,24 +15,37 @@ function useGetStoreListByKeyword() {
   const [coordinate] = useAtom(pinCoordinateAtom)
   const [searchBy] = useAtom(searchByAtom)
 
-  const { data } = useQuery({
+  const fetchStoreList = ({ pageParam = 0 }) =>
+    getStoreListByKeyword(searchText, coordinate.latitude, coordinate.longitude, pageParam)
+
+  return useInfiniteQuery({
     queryKey: ['getStoreListByKeyword', searchText],
-    queryFn: () => getStoreListByKeyword(searchText, coordinate.latitude, coordinate.longitude),
-    enabled: searchText.length !== 0 && searchBy === 'keyword',
+    queryFn: fetchStoreList,
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.hasNext ? allPages.length : undefined
+    },
+    enabled: searchText !== undefined && searchText.length !== 0 && searchBy === 'keyword',
   })
-  return { data }
 }
 
 function useGetStoreListByPin() {
   const [coordinate] = useAtom(pinCoordinateAtom)
   const [searchBy] = useAtom(searchByAtom)
 
-  return useQuery({
+  const fetchStoreList = ({ pageParam = 0 }) => getStoreListByPin(coordinate.latitude, coordinate.longitude, pageParam)
+
+  return useInfiniteQuery({
     queryKey: ['getStoreListByPin'],
-    queryFn: () => getStoreListByPin(coordinate.latitude, coordinate.longitude),
+    queryFn: fetchStoreList,
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.hasNext ? allPages.length : undefined
+    },
     enabled: false,
   })
 }
+
 function useGetStoreInfo(storeId: number) {
   const { data } = useSuspenseQuery({
     queryKey: ['getStoreInfo', storeId],

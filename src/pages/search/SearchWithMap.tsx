@@ -2,10 +2,9 @@ import Header from '@/components/Header'
 import ScreenLayout from '@/components/ScreenLayout'
 import { SearchNavParams } from '@/navigators/SearchNav'
 import { tabVisibilityAtom } from '@/states/globalAtom'
-import { SearchTextAtom, pinAddressAtom, pinCoordinateAtom, searchByAtom } from '@/states/searchAtom'
+import { SearchTextAtom, pinAddressAtom, pinCoordinateAtom } from '@/states/searchAtom'
 import { colors } from '@/utils/colors'
-import { NaverMapMarkerOverlay, NaverMapView, NaverMapViewRef } from '@mj-studio/react-native-naver-map'
-import { useIsFocused } from '@react-navigation/core'
+import { Coord, NaverMapView, NaverMapViewRef } from '@mj-studio/react-native-naver-map'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useAtom } from 'jotai'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -15,30 +14,29 @@ import { screenHeight, screenWidth } from '@/utils/dimensions'
 import { pixelToDpConverter } from '@/utils/pixel'
 import { useGetAddress } from '@/hooks/queries/ReverseGeocode'
 import { LayoutChangeEvent } from 'react-native'
-import { getAddress } from '@/utils/address'
+import { getAddressFullName } from '@/utils/address'
 import { Region } from '@/apis/ReverseGeocode'
 import { useGetStoreListByPin } from '@/hooks/queries/Store'
 import * as Location from 'expo-location'
 import { getCurrentCoordinate } from '@/utils/location'
 import { useFocusEffect } from '@react-navigation/native'
+import _ from 'lodash'
 
 type SearchWithMapProps = StackScreenProps<SearchNavParams, 'SearchMap'>
 
 export default function SearchWithMap({ navigation }: SearchWithMapProps) {
   const mapRef = useRef<NaverMapViewRef>(null)
 
-  const isFocused = useIsFocused()
   const [mapHeight, setMapHeight] = useState<number>(0)
   const [, setTabVisibility] = useAtom(tabVisibilityAtom)
   const [, setSearchText] = useAtom(SearchTextAtom)
   const [pinCoordinate, setPinCoordinate] = useAtom(pinCoordinateAtom)
   const [pinAddress, setPinAddress] = useAtom(pinAddressAtom)
-  const [, setSearchBy] = useAtom(searchByAtom)
 
   const { data: addressInfo } = useGetAddress()
 
   useEffect(() => {
-    const address = getAddress(addressInfo?.results[0].region as Region)
+    const address = getAddressFullName(addressInfo?.results[0].region as Region)
     address.length !== 0 && setPinAddress(address)
   }, [addressInfo])
 
@@ -49,7 +47,6 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
   const { refetch } = useGetStoreListByPin()
   const onPressSettingBtn = () => {
     setSearchText(pinAddress)
-    setSearchBy('pin')
     refetch()
     navigation.goBack()
   }
@@ -59,18 +56,24 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
     setMapHeight(height)
   }
 
-  const getCoordinate = async () => {
+  const getCoordinate = _.debounce(async () => {
     const data = await mapRef.current?.screenToCoordinate({
       screenX: pixelToDpConverter(screenWidth / 2),
       screenY: pixelToDpConverter((mapHeight - 118) / 2 + 118),
     })
     const latitude = Number(data?.latitude)
     const longitude = Number(data?.longitude)
-    setPinCoordinate({ latitude, longitude })
-  }
+    if (
+      (latitude !== 0 && pinCoordinate.latitude.toFixed(4) !== latitude.toFixed(4)) ||
+      (longitude !== 0 && pinCoordinate.longitude.toFixed(4) !== longitude.toFixed(4))
+    ) {
+      setPinCoordinate({ latitude, longitude })
+    }
+  }, 500)
 
   const moveCamera = () => {
-    getCurrentCoordinate().then((current) => {
+    getCurrentCoordinate().then((current: Coord) => {
+      setPinCoordinate(current)
       mapRef.current?.animateCameraTo({ latitude: current.latitude, longitude: current.longitude, zoom: 15 })
     })
   }
@@ -97,9 +100,7 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
             mapPadding={{ bottom: 118 }}
             onCameraChanged={getCoordinate}
             initialCamera={{ ...pinCoordinate, zoom: 15 }}
-          >
-            <NaverMapMarkerOverlay latitude={33} longitude={127} />
-          </NaverMapView>
+          />
           <Pin width={35} height={43} />
         </MapContainer>
         <BottomContainer>
@@ -136,7 +137,6 @@ const BottomContainer = styled.View`
   gap: 15px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
-  height: 118px;
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -149,7 +149,7 @@ const Address = styled.Text`
   font-family: 'Medium';
   font-size: 16px;
   color: ${colors.black};
-  height: 20px;
+  line-height: 20px;
 `
 const SettingBtn = styled.TouchableOpacity`
   border-radius: 6px;

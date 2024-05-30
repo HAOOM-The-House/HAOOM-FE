@@ -3,25 +3,21 @@ import ScreenLayout from '@/components/ScreenLayout'
 import { SearchNavParams } from '@/navigators/SearchNav'
 import { tabVisibilityAtom } from '@/states/globalAtom'
 import { colors } from '@/utils/colors'
-import { useIsFocused } from '@react-navigation/native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useAtom } from 'jotai'
-import { Suspense, useEffect } from 'react'
+import { Suspense, useCallback } from 'react'
 import styled from 'styled-components/native'
 import * as Linking from 'expo-linking'
 import { useGetProductInfo } from '@/hooks/queries/Store'
 import { ActivityIndicator, Image } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
+import { screenHeight } from '@/utils/dimensions'
 
 type ProductDetailProps = StackScreenProps<SearchNavParams, 'SearchProduct'>
 
 export default function ProductDetail({ navigation, route }: ProductDetailProps) {
-  const isFocused = useIsFocused()
   const [, setTabVisibility] = useAtom(tabVisibilityAtom)
   const { productInfo } = useGetProductInfo(route.params.productId)
-
-  useEffect(() => {
-    isFocused && setTabVisibility(false)
-  }, [isFocused])
 
   const onPressBackBtn = () => {
     navigation.goBack()
@@ -30,6 +26,8 @@ export default function ProductDetail({ navigation, route }: ProductDetailProps)
   const onPressInquireBtn = () => {
     Linking.openURL(`sms:${route.params.number}`)
   }
+
+  useFocusEffect(useCallback(() => setTabVisibility(false), []))
 
   return (
     <ScreenLayout>
@@ -41,9 +39,15 @@ export default function ProductDetail({ navigation, route }: ProductDetailProps)
             <ProductName>{productInfo.name}</ProductName>
           </TextContainer>
           <ImageContainer showsVerticalScrollIndicator={false}>
-            {productInfo.imgUrls.map((path) => (
-              <ImageWrapper key={path}>
-                <Image source={{ uri: path }} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
+            {productInfo.imgUrls.map((path, i) => (
+              <ImageWrapper
+                key={path}
+                style={{ paddingBottom: i === productInfo.imgUrls.length - 1 ? screenHeight * 0.1 : 0 }}
+              >
+                <Image
+                  source={{ uri: path }}
+                  style={{ width: '100%', aspectRatio: 0.7, resizeMode: 'cover', borderRadius: 6 }}
+                />
               </ImageWrapper>
             ))}
           </ImageContainer>
@@ -60,7 +64,6 @@ export default function ProductDetail({ navigation, route }: ProductDetailProps)
 
 const Container = styled.View`
   flex: 1;
-  position: relative;
 `
 const TextContainer = styled.View`
   padding: 20px;
@@ -80,8 +83,6 @@ const BottomContainer = styled.View`
   width: 100%;
   padding: 15px 20px;
   background-color: ${colors.white};
-  position: absolute;
-  bottom: 0;
 `
 const InquireBtn = styled.TouchableOpacity`
   background-color: ${colors.main};
@@ -95,12 +96,11 @@ const InquireText = styled.Text`
   color: ${colors.white};
 `
 const ImageContainer = styled.ScrollView`
-  padding: 20px;
+  padding: 0 20px 0 20px;
 `
 const ImageWrapper = styled.View`
   border-radius: 6px;
   width: 100%;
-  background-color: #d9d9d9;
   aspect-ratio: 0.7;
   margin-bottom: 10px;
 `

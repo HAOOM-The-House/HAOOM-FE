@@ -2,10 +2,9 @@ import Header from '@/components/Header'
 import ScreenLayout from '@/components/ScreenLayout'
 import { SearchNavParams } from '@/navigators/SearchNav'
 import { colors } from '@/utils/colors'
-import { screenWidth } from '@/utils/dimensions'
-import { useIsFocused } from '@react-navigation/core'
+import { screenHeight, screenWidth } from '@/utils/dimensions'
 import { StackScreenProps } from '@react-navigation/stack'
-import { Suspense, useEffect } from 'react'
+import { Suspense, useCallback } from 'react'
 import styled from 'styled-components/native'
 import { tabVisibilityAtom } from '@/states/globalAtom'
 import { useAtom } from 'jotai'
@@ -13,11 +12,11 @@ import { useGetStoreInfo } from '@/hooks/queries/Store'
 import { getNumber } from '@/utils/number'
 import { Product } from '@/apis/Store'
 import { ActivityIndicator, FlatList, Image } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
 
 type ProductListProps = StackScreenProps<SearchNavParams, 'SearchStore'>
 
 export default function ProductList({ navigation, route }: ProductListProps) {
-  const isFocused = useIsFocused()
   const [, setTabVisibility] = useAtom(tabVisibilityAtom)
 
   const { storeInfo } = useGetStoreInfo(route.params.storeId)
@@ -29,19 +28,27 @@ export default function ProductList({ navigation, route }: ProductListProps) {
     navigation.goBack()
   }
 
-  useEffect(() => {
-    isFocused && setTabVisibility(false)
-  }, [isFocused])
+  useFocusEffect(
+    useCallback(() => {
+      setTabVisibility(false)
+      return () => {
+        setTabVisibility(true)
+      }
+    }, [])
+  )
 
   const renderItem = ({ item: { id, thumbnailUrl, name } }: { item: Product }) => (
     <ImgWrapper onPress={() => onPressProduct(id)}>
-      <Image style={{ width: '100%', height: '100%', resizeMode: 'cover' }} source={{ uri: thumbnailUrl }} />
+      <Image
+        style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 6 }}
+        source={{ uri: thumbnailUrl }}
+      />
     </ImgWrapper>
   )
 
   return (
-    <ScreenLayout>
-      <Suspense fallback={<ActivityIndicator size={'small'} />}>
+    <Suspense fallback={<ActivityIndicator size="large" />}>
+      <ScreenLayout>
         <Container>
           <Header showLeftIcon={true} onPressLeftIcon={onPressBackBtn} />
           <TextContainer>
@@ -55,7 +62,7 @@ export default function ProductList({ navigation, route }: ProductListProps) {
             <FlatList
               data={storeInfo.products}
               renderItem={renderItem}
-              contentContainerStyle={{ gap: 12 }}
+              contentContainerStyle={{ gap: 12, paddingBottom: screenHeight * 0.05 }}
               columnWrapperStyle={{ gap: 12 }}
               numColumns={2}
               showsVerticalScrollIndicator={false}
@@ -67,8 +74,8 @@ export default function ProductList({ navigation, route }: ProductListProps) {
             </NoProductWrapper>
           )}
         </Container>
-      </Suspense>
-    </ScreenLayout>
+      </ScreenLayout>
+    </Suspense>
   )
 }
 
@@ -92,7 +99,6 @@ const Detail = styled.Text`
 `
 const width = screenWidth / 2 - 26
 const ImgWrapper = styled.TouchableOpacity`
-  background-color: #d9d9d9;
   border-radius: 6px;
   aspect-ratio: 0.7;
   width: ${`${width}px`};

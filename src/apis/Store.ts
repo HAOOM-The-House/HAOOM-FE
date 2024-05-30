@@ -8,7 +8,7 @@ interface StoreListResponse extends apiResponse {
   hasNext: boolean
 }
 
-interface Store {
+export interface Store {
   id: number
   name: string
   phoneNumber: string
@@ -50,12 +50,28 @@ export interface ProductDetail {
   imgUrls: string[]
 }
 
-async function getStoreListByKeyword(keyword: string, latitude: number, longitude: number): Promise<StoreListResponse> {
-  const { data } = await api.get(`/v1/shops/search?keyword=${keyword}&latitude=${latitude}&longitude=${longitude}`)
+async function getStoreListByKeyword(
+  keyword: string,
+  latitude: number,
+  longitude: number,
+  pageIdx: number,
+  pageSize: number = 15
+): Promise<StoreListResponse> {
+  const { data } = await api.get(
+    `/v1/shops/search?keyword=${keyword}&latitude=${latitude}&longitude=${longitude}&pageIdx=${pageIdx}&pageSize=${pageSize}`
+  )
   return data
 }
-async function getStoreListByPin(latitude: number, longitude: number): Promise<StoreListResponse> {
-  const { data } = await api.get(`/v1/shops?latitude=${latitude}&longitude=${longitude}`)
+
+async function getStoreListByPin(
+  latitude: number,
+  longitude: number,
+  pageIdx: number,
+  pageSize: number = 15
+): Promise<StoreListResponse> {
+  const { data } = await api.get(
+    `/v1/shops?latitude=${latitude}&longitude=${longitude}&pageIdx=${pageIdx}&pageSize=${pageSize}`
+  )
   return data
 }
 
