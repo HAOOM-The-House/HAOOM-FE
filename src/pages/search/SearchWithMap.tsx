@@ -64,7 +64,12 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
     })
     const latitude = Number(data?.latitude)
     const longitude = Number(data?.longitude)
-    setPinCoordinate({ latitude, longitude })
+    if (
+      (latitude !== 0 && pinCoordinate.latitude.toFixed(4) !== latitude.toFixed(4)) ||
+      (longitude !== 0 && pinCoordinate.longitude.toFixed(4) !== longitude.toFixed(4))
+    ) {
+      setPinCoordinate({ latitude, longitude })
+    }
   }
 
   const moveCamera = () => {
