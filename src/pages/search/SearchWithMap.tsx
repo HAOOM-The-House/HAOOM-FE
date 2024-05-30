@@ -4,8 +4,7 @@ import { SearchNavParams } from '@/navigators/SearchNav'
 import { tabVisibilityAtom } from '@/states/globalAtom'
 import { SearchTextAtom, pinAddressAtom, pinCoordinateAtom } from '@/states/searchAtom'
 import { colors } from '@/utils/colors'
-import { Coord, NaverMapMarkerOverlay, NaverMapView, NaverMapViewRef } from '@mj-studio/react-native-naver-map'
-import { useIsFocused } from '@react-navigation/core'
+import { Coord, NaverMapView, NaverMapViewRef } from '@mj-studio/react-native-naver-map'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useAtom } from 'jotai'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -27,7 +26,6 @@ type SearchWithMapProps = StackScreenProps<SearchNavParams, 'SearchMap'>
 export default function SearchWithMap({ navigation }: SearchWithMapProps) {
   const mapRef = useRef<NaverMapViewRef>(null)
 
-  const isFocused = useIsFocused()
   const [mapHeight, setMapHeight] = useState<number>(0)
   const [, setTabVisibility] = useAtom(tabVisibilityAtom)
   const [, setSearchText] = useAtom(SearchTextAtom)
@@ -101,9 +99,7 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
             mapPadding={{ bottom: 118 }}
             onCameraChanged={getCoordinate}
             initialCamera={{ ...pinCoordinate, zoom: 15 }}
-          >
-            <NaverMapMarkerOverlay latitude={33} longitude={127} />
-          </NaverMapView>
+          />
           <Pin width={35} height={43} />
         </MapContainer>
         <BottomContainer>
