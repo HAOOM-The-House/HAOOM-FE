@@ -15,7 +15,7 @@ import { screenHeight, screenWidth } from '@/utils/dimensions'
 import { pixelToDpConverter } from '@/utils/pixel'
 import { useGetAddress } from '@/hooks/queries/ReverseGeocode'
 import { LayoutChangeEvent } from 'react-native'
-import { getAddress } from '@/utils/address'
+import { getAddressFullName } from '@/utils/address'
 import { Region } from '@/apis/ReverseGeocode'
 import { useGetStoreListByPin } from '@/hooks/queries/Store'
 import * as Location from 'expo-location'
@@ -37,7 +37,7 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
   const { data: addressInfo } = useGetAddress()
 
   useEffect(() => {
-    const address = getAddress(addressInfo?.results[0].region as Region)
+    const address = getAddressFullName(addressInfo?.results[0].region as Region)
     address.length !== 0 && setPinAddress(address)
   }, [addressInfo])
 
