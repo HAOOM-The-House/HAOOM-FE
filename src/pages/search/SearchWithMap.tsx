@@ -20,6 +20,7 @@ import { useGetStoreListByPin } from '@/hooks/queries/Store'
 import * as Location from 'expo-location'
 import { getCurrentCoordinate } from '@/utils/location'
 import { useFocusEffect } from '@react-navigation/native'
+import _ from 'lodash'
 
 type SearchWithMapProps = StackScreenProps<SearchNavParams, 'SearchMap'>
 
@@ -55,7 +56,7 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
     setMapHeight(height)
   }
 
-  const getCoordinate = async () => {
+  const getCoordinate = _.debounce(async () => {
     const data = await mapRef.current?.screenToCoordinate({
       screenX: pixelToDpConverter(screenWidth / 2),
       screenY: pixelToDpConverter((mapHeight - 118) / 2 + 118),
@@ -68,7 +69,7 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
     ) {
       setPinCoordinate({ latitude, longitude })
     }
-  }
+  }, 500)
 
   const moveCamera = () => {
     getCurrentCoordinate().then((current: Coord) => {
