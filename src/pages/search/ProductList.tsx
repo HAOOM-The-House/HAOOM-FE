@@ -20,6 +20,7 @@ export default function ProductList({ navigation, route }: ProductListProps) {
   const [, setTabVisibility] = useAtom(tabVisibilityAtom)
 
   const { storeInfo } = useGetStoreInfo(route.params.storeId)
+  const addressFull = `${storeInfo?.address.sido} ${storeInfo?.address.sigungu} ${storeInfo?.address.doro}`
 
   const onPressProduct = (productId: number) => {
     navigation.navigate('SearchProduct', { productId, number: storeInfo.phoneNumber, storeName: storeInfo.name })
@@ -54,7 +55,8 @@ export default function ProductList({ navigation, route }: ProductListProps) {
           <TextContainer>
             <Name>{storeInfo?.name}</Name>
             <DetailContainer>
-              <Detail>{storeInfo?.address.fullNm}</Detail>
+              <Detail>{addressFull}</Detail>
+              <Detail>{storeInfo?.address.detail}</Detail>
               <Detail>{getNumber(storeInfo?.phoneNumber)}</Detail>
             </DetailContainer>
           </TextContainer>
