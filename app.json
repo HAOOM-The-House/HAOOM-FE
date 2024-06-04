@@ -57,11 +57,11 @@
             "ACCESS_BACKGROUND_LOCATION": true
           },
           "ios": {
-            "NSLocationAlwaysAndWhenInUseUsageDescription": "please allow your location usage ^-^",
-            "NSLocationWhenInUseUsageDescription": "please allow your location usage ^-^",
+            "NSLocationAlwaysAndWhenInUseUsageDescription": "현재 위치를 중심으로 지도를 이용할 수 있습니다.",
+            "NSLocationWhenInUseUsageDescription": "현재 위치를 중심으로 지도를 이용할 수 있습니다.",
             "NSLocationTemporaryUsageDescriptionDictionary": {
-              "purposeKey": "toIdentifyCurrentLocation",
-              "usageDescription": "please allow your location usage ^-^"
+              "purposeKey": "위치 기반 검색 허용",
+              "usageDescription": "현재 위치를 중심으로 지도를 이용할 수 있습니다."
             }
           }
         }
@@ -77,7 +77,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+          "locationAlwaysAndWhenInUsePermission": "현재 위치를 중심으로 지도를 이용할 수 있습니다."
         }
       ]
     ],
