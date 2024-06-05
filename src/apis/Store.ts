@@ -30,7 +30,7 @@ export interface StoreDetail {
 interface Address {
   sido: string
   sigungu: string
-  emd: string
+  doro: string
   detail: string
   fullNm: string
 }
