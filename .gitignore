@@ -35,3 +35,6 @@ yarn-error.*
 *.tsbuildinfo
 
 /android
+
+eas.json
+app.json
