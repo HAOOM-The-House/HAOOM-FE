@@ -6,7 +6,6 @@ export const getDistance = (distance: number) => {
     if (Number.isInteger(kilometer)) return kilometer + 'KM'
     else return kilometer.toFixed(1) + 'KM'
   } else {
-    return String(distance) + 'M'
     return distance.toFixed(1) + 'M'
   }
 }
