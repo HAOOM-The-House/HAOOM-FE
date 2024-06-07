@@ -22,12 +22,17 @@ import { getCurrentCoordinate } from '@/utils/location'
 import { useFocusEffect } from '@react-navigation/native'
 import _ from 'lodash'
 
+interface MapSize {
+  width: number
+  height: number
+}
+
 type SearchWithMapProps = StackScreenProps<SearchNavParams, 'SearchMap'>
 
 export default function SearchWithMap({ navigation }: SearchWithMapProps) {
   const mapRef = useRef<NaverMapViewRef>(null)
 
-  const [mapHeight, setMapHeight] = useState<number>(0)
+  const [mapSize, setMapSize] = useState<MapSize>({ width: 0, height: 0 })
   const [, setTabVisibility] = useAtom(tabVisibilityAtom)
   const [, setSearchText] = useAtom(SearchTextAtom)
   const [pinCoordinate, setPinCoordinate] = useAtom(pinCoordinateAtom)
@@ -51,15 +56,15 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
     navigation.goBack()
   }
 
-  const getMapHeight = (event: LayoutChangeEvent) => {
-    const { height } = event.nativeEvent.layout
-    setMapHeight(height)
+  const getMapSize = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout
+    setMapSize({ width, height })
   }
 
   const getCoordinate = _.debounce(async () => {
     const data = await mapRef.current?.screenToCoordinate({
-      screenX: pixelToDpConverter(screenWidth / 2),
-      screenY: pixelToDpConverter((mapHeight - 118) / 2 + 118),
+      screenX: pixelToDpConverter(mapSize.width / 2),
+      screenY: pixelToDpConverter((mapSize.height - 118) / 2 + 118),
     })
     const latitude = Number(data?.longitude)
     const longitude = Number(data?.latitude)
@@ -93,7 +98,7 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
     <ScreenLayout>
       <Container>
         <Header title="지도에서 위치 찾기" showLeftIcon onPressLeftIcon={onPressBackBtn} />
-        <MapContainer onLayout={getMapHeight}>
+        <MapContainer onLayout={getMapSize}>
           <NaverMapView
             style={{ flex: 1 }}
             ref={mapRef}
