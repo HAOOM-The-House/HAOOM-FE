@@ -39,7 +39,7 @@ interface Area {
 
 async function getAddress({ longitude, latitude }: Coord): Promise<APIresponse> {
   const { data } = await geocodeAPI.get(
-    `/v2/gc?request=coordsToaddr&coords=${latitude},${longitude}&sourcecrs=epsg:4326&output=json&orders=admcode`
+    `/v2/gc?request=coordsToaddr&coords=${longitude},${latitude}&sourcecrs=epsg:4326&output=json&orders=legalcode`
   )
   return data
 }
