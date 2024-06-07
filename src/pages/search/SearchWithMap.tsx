@@ -61,8 +61,8 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
       screenX: pixelToDpConverter(screenWidth / 2),
       screenY: pixelToDpConverter((mapHeight - 118) / 2 + 118),
     })
-    const latitude = Number(data?.latitude)
-    const longitude = Number(data?.longitude)
+    const latitude = Number(data?.longitude)
+    const longitude = Number(data?.latitude)
     if (
       (latitude !== 0 && pinCoordinate.latitude.toFixed(4) !== latitude.toFixed(4)) ||
       (longitude !== 0 && pinCoordinate.longitude.toFixed(4) !== longitude.toFixed(4))
