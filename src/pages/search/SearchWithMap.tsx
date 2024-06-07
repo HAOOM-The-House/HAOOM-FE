@@ -13,7 +13,7 @@ import PinIcon from '@/assets/images/SVGs/Location.svg'
 import { screenHeight, screenWidth } from '@/utils/dimensions'
 import { pixelToDpConverter } from '@/utils/pixel'
 import { useGetAddress } from '@/hooks/queries/ReverseGeocode'
-import { LayoutChangeEvent } from 'react-native'
+import { ActivityIndicator, LayoutChangeEvent } from 'react-native'
 import { getAddressFullName } from '@/utils/address'
 import { Region } from '@/apis/ReverseGeocode'
 import { useGetStoreListByPin } from '@/hooks/queries/Store'
@@ -69,8 +69,8 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
     const latitude = Number(data?.longitude)
     const longitude = Number(data?.latitude)
     if (
-      (latitude !== 0 && pinCoordinate.latitude.toFixed(4) !== latitude.toFixed(4)) ||
-      (longitude !== 0 && pinCoordinate.longitude.toFixed(4) !== longitude.toFixed(4))
+      (!isNaN(latitude) && latitude !== 0 && pinCoordinate.latitude.toFixed(4) !== latitude.toFixed(4)) ||
+      (!isNaN(longitude) && longitude !== 0 && pinCoordinate.longitude.toFixed(4) !== longitude.toFixed(4))
     ) {
       setPinCoordinate({ latitude, longitude })
     }
@@ -110,7 +110,11 @@ export default function SearchWithMap({ navigation }: SearchWithMapProps) {
         </MapContainer>
         <BottomContainer>
           <TextContainer>
-            <Address>{pinAddress}</Address>
+            {pinAddress.length === 0 ? (
+              <ActivityIndicator size={'small'} style={{ width: '100%' }} />
+            ) : (
+              <Address>{pinAddress}</Address>
+            )}
           </TextContainer>
           <SettingBtn onPress={onPressSettingBtn}>
             <SettingText>선택한 위치로 설정</SettingText>
