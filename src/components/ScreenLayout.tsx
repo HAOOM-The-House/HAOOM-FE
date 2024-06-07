@@ -3,6 +3,7 @@ import React from 'react'
 import { Platform } from 'react-native'
 import { StatusBar } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { colors } from '@/utils/colors'
 
 interface ScreenLayoutProps {
   children: React.ReactNode
@@ -15,10 +16,10 @@ export default function ScreenLayout({ children, background = 'white' }: ScreenL
     <ScreenContainer
       style={{
         backgroundColor: background,
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
         paddingBottom: Platform.OS === 'android' ? insets.bottom : 0,
       }}
     >
+      <StatusBar backgroundColor={colors.black} />
       {children}
     </ScreenContainer>
   )
